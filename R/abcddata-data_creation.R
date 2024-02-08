@@ -952,7 +952,7 @@ abcddata_add.sample_characteristics <- function(
   #### 2.1.2.5) Income ####
 
   dtf_demo$recoded.combined_income_baseline <- abcddata_replace(
-    dtf_demo$demo_prnt_income_v2,
+    dtf_demo$demo_comb_income_v2,
     c( 1:10, 999, 777 ),
     c(
       'Less than $5000', # 1
@@ -971,7 +971,7 @@ abcddata_add.sample_characteristics <- function(
   )
 
   dtf_demo$recoded.combined_income <- abcddata_replace(
-    dtf_demo$demo_prnt_income_v2_l,
+    dtf_demo$demo_comb_income_v2_l,
     c( 1:10, 999, 777 ),
     c(
       'Less than $5000', # 1
@@ -1007,12 +1007,18 @@ abcddata_add.sample_characteristics <- function(
       '$5000 through $11999', # 2
       '$12000 through $15999', # 3
       '$16000 through $24999', # 4
+
       '$25000 through $34999', # 5
       '$35000 through $49999', # 6
+
       '$50000 through $74999', # 7
+
       '$75000 through $99999', # 8
+
       '$100000 through $199999', # 9
+
       '$200000 and greater', # 10
+
       'Do not know', # 999
       'Refuse to answer' # 777
     ),
@@ -1021,14 +1027,59 @@ abcddata_add.sample_characteristics <- function(
       '<$25k', # 2
       '<$25k', # 3
       '<$25k', # 4
+
       '$25k - $49k', # 5
       '$25k - $49k', # 6
+
       '$50k - $74k', # 7
-      '$75 - $99k', # 8
+
+      '$75k - $99k', # 8
+
       '$100k - $199k', # 9
-      '$200+', # 10
+
+      '$200k+', # 10
+
       'Do not know', # 999
       'Refuse to answer' # 777
+    )
+  )
+
+  # Collapse categories due to small cell counts
+  dtf_demo$recoded.combined_income_collapsed_4 <- abcddata_replace(
+    dtf_demo$recoded.combined_income,
+    c(
+      'Less than $5000', # 1
+      '$5000 through $11999', # 2
+      '$12000 through $15999', # 3
+      '$16000 through $24999', # 4
+      '$25000 through $34999', # 5
+      '$35000 through $49999', # 6
+
+      '$50000 through $74999', # 7
+      '$75000 through $99999', # 8
+
+      '$100000 through $199999', # 9
+      '$200000 and greater', # 10
+
+      'Do not know', # 999
+      'Refuse to answer' # 777
+    ),
+    c(
+      '<$50k', # 1
+      '<$50k', # 2
+      '<$50k', # 3
+      '<$50k', # 4
+      '<$50k', # 5
+      '<$50k', # 6
+
+      '$50k - $99k', # 7
+      '$50k - $99k', # 8
+
+      '$100k+', # 9
+      '$100k+', # 10
+
+      'Not provided', # 999
+      'Not provided' # 777
     )
   )
 
@@ -1344,6 +1395,8 @@ abcddata_add.sample_characteristics <- function(
         'recoded.combined_income',
       SMP.CHR.PS.Income.Combined.Collapsed_8 =
         'recoded.combined_income_collapsed_8',
+      SMP.CHR.PS.Income.Combined.Collapsed_4 =
+        'recoded.combined_income_collapsed_4',
       SMP.CHR.PS.Marital_status =
         'recoded.marital_status',
       SMP.CHR.PS.Marital_status.Collapsed_4 =
@@ -1446,8 +1499,40 @@ abcddata_add.sample_characteristics <- function(
       ),
       chr_source_files = chr_files[1],
       chr_source_variables = c(
-        "demo_prnt_income_v2",
-        "demo_prnt_income_v2_l"
+        "demo_comb_income_v2",
+        "demo_comb_income_v2_l"
+      )
+    ),
+
+    recoded.combined_income_collapsed_8 = list(
+      chr_description = paste0(
+        "The combined income of the parents - collapsed to 8 categories"
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'recoded.combined_income_collapsed_8',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        "demo_comb_income_v2",
+        "demo_comb_income_v2_l"
+      )
+    ),
+
+    recoded.combined_income_collapsed_4 = list(
+      chr_description = paste0(
+        "The combined income of the parents - collapsed to 4 categories"
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'recoded.combined_income_collapsed_4',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        "demo_comb_income_v2",
+        "demo_comb_income_v2_l"
       )
     ),
 

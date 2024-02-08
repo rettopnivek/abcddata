@@ -12,14 +12,17 @@ abcddata_add.UPPS(
 )
 }
 \arguments{
+\item{dtf_ABCD_long_form}{A data frame, output from
+the \link{abcddata_initialize_long_form}
+function.}
+
 \item{chr_files}{A character vector with
-the file names for 1) the data on
-longitudinal tracking of the youths, and
-2) genetics for the youths.}
+the file name for the data with responses
+to the UPPS-P items.}
 
 \item{chr_paths}{A character vector with
-the associated folder paths for the
-longitudinal tracking and genetics files.}
+the associated folder path for the
+UPPS-P responses file.}
 
 \item{lgc_progress}{A logical value; if
 \code{TRUE} displays the progress of the
@@ -44,11 +47,6 @@ details on the use of the UPPS-P scale in the
 ABCD® study.
 }
 \references{
-Zapolski, T. C. B., Stairs, A. M., Settles, R. F., Combs,
-J. L., & Smith, G. T. (2010). The measurement of dispositions
-to rash action in children. Assessment, 17 (1), 116-125.
-https://doi.org/10.1177/1073191109351372
-
 Barch, D. M., Albaugh, M. D., Avenevoli, S., Chang, L., Clark,
 D. B., Glantz, M. D., Hudziak, J. J., Jernigan, T. L.,
 Tapert, S. F., Yurgelun-Todd, D., Alia-Klein, N., Potter,
@@ -57,4 +55,9 @@ K. J. (2018). Demographic, physical and mental health
 assessments in the Adolescent Brain and Cognitive Development
 study: Rationale and description. Developmental Cognitive
 Neuroscience, 32, 55–66. https://doi.org/10.1016/j.dcn.2017.10.010
+
+Zapolski, T. C. B., Stairs, A. M., Settles, R. F., Combs,
+J. L., & Smith, G. T. (2010). The measurement of dispositions
+to rash action in children. Assessment, 17 (1), 116-125.
+https://doi.org/10.1177/1073191109351372
 }
