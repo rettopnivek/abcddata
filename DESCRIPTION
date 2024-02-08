@@ -1,0 +1,17 @@
+Package: abcddata
+Title: Data Preparation for the ABCD® Study
+Version: 0.0.5
+Authors@R: 
+    person( "Kevin", "Potter", , "kevin.w.potter@gmail.com", 
+    role = c("aut", "cre"),
+    comment = c(ORCID = "0000-0002-3845-0512" ) )
+Description: Assorted functions for processing data collected 
+  by the ABCD® study (applicable for release version 5.0 and later).
+License: MIT + License
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Depends: 
+    R (>= 4.0)
+LazyData: true
+URL: https://rettopnivek.github.io/ddabcd/
