@@ -3,7 +3,7 @@
 # email: kevin.w.potter@gmail.com
 # Please email me directly if you
 # have any questions or comments
-# Last updated 2024-02-06
+# Last updated 2024-02-09
 
 # Table of contents
 
@@ -1504,13 +1504,13 @@ abcddata_add.sample_characteristics <- function(
       )
     ),
 
-    recoded.combined_income_collapsed_8 = list(
+    SMP.CHR.PS.Income.Combined.Collapsed_8 = list(
       chr_description = paste0(
         "The combined income of the parents - collapsed to 8 categories"
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'recoded.combined_income_collapsed_8',
+        'SMP.CHR.PS.Income.Combined.Collapsed_8',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -1520,13 +1520,13 @@ abcddata_add.sample_characteristics <- function(
       )
     ),
 
-    recoded.combined_income_collapsed_4 = list(
+    SMP.CHR.PS.Income.Combined.Collapsed_4 = list(
       chr_description = paste0(
         "The combined income of the parents - collapsed to 4 categories"
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'recoded.combined_income_collapsed_4',
+        'SMP.CHR.PS.Income.Combined.Collapsed_4',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
