@@ -3605,7 +3605,7 @@ abcddata_add.CBCL <- function(
 
     int_index <-
       ( names(chr_item_content) %in% gsub(
-        'QST.INT.PC.CBCL.Item_', '', chr_current, fixed = TRUE
+        'QST.INT.PC.CBCL.', '', chr_current, fixed = TRUE
       ) ) |> which()
 
     lst_codebook_entries[[i]] <- list(
@@ -3615,7 +3615,7 @@ abcddata_add.CBCL <- function(
       lst_collected_over = lst_collected_over,
       chr_source_files = chr_files[1],
       chr_source_variables =
-
+        chr_items[i]
     )
 
     # Close 'Loop over individual items'
