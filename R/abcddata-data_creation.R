@@ -2717,14 +2717,14 @@ abcddata_add.BIS_BAS <- function(
   chr_columns <- paste0(
     'QST.INT.CS.BISBAS.Item_', c( 13:16 )
   )
-  dtf_ABCD_long_form$QST.INT.CS.UPPS.BAS_D.Summed_score <-
+  dtf_ABCD_long_form$QST.INT.CS.BISBAS.BAS_D.Summed_score <-
     rowSums( dtf_ABCD_long_form[, chr_columns] )
 
 
   chr_columns <- paste0(
     'QST.INT.CS.BISBAS.Item_', c( 17:20 )
   )
-  dtf_ABCD_long_form$QST.INT.CS.UPPS.BAS_FS.Summed_score <-
+  dtf_ABCD_long_form$QST.INT.CS.BISBAS.BAS_FS.Summed_score <-
     rowSums( dtf_ABCD_long_form[, chr_columns] )
 
 
