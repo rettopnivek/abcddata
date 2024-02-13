@@ -2059,8 +2059,7 @@ abcddata_add.UPPS <- function(
       "a greater tendency to act without thinking beforehand",
       "a greater willingness to seek out novel and thrilling experiences",
       "a greater tendency towards rashness during positive moods"
-    ),
-    "."
+    )
   )
 
   # Loop over subscales
@@ -2107,13 +2106,16 @@ abcddata_add.UPPS <- function(
 #' Add Data on Substance Use
 #'
 #' Function to add data on whether children engaged
-#' in any substance use. Two type of substance use
+#' in any substance use.
+#'
+#' Two type of substance use
 #' are defined as per Sullivan et al. (2022):
 #' experimentation (low-level use, such as alcohol
 #' sipping, nicotine/cannabis puffing or trying)
 #' versus initiation (one or more standard drinks
 #' of alcohol, more than a puff or taste of
 #' nicotine/cannabis, any other type of substance use).
+#'
 #' Substances were categorized into four types:
 #' alcohol, nicotine or tobacco, cannabis, and
 #' other substances (which consisted of: synthetic MJ,
@@ -2850,6 +2852,7 @@ abcddata_add.BIS_BAS <- function(
       lst_collected_over = lst_collected_over,
       chr_source_files = chr_files[1],
       chr_source_variables =
+        chr_items[i]
     )
 
     # Close 'Loop over individual items'
@@ -2873,8 +2876,7 @@ abcddata_add.BIS_BAS <- function(
       "a greater excitement over reinforcing outcomes",
       "a greater intensity of goal-directed behavior",
       "a greater enjoyment of enjoyment for its own sake"
-    ),
-    "."
+    )
   )
 
   # Loop over subscales
