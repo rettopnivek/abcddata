@@ -82,6 +82,8 @@
 #'   \code{TRUE} displays the progress of the
 #'   data processing.
 #'
+#' @author Kevin Potter
+#'
 #' @references
 #' Feczko, E., Conan, G., Marek, S., Tervo-Clemmens, B.,
 #'   Cordova, M., Doyle, O., ... & Fair, D. A. (2021). Adolescent

@@ -743,6 +743,8 @@ abcddata_codebook_add_entry <- function(
     chr_data_type = chr_data_type,
     chr_reporter = chr_reporter,
     chr_description = chr_description,
+    lst_values_and_labels = lst_values_and_labels,
+    lst_collected_over = lst_collected_over,
     chr_source_files = chr_source_files,
     chr_source_variables = chr_source_variables,
     chr_notes = chr_notes
