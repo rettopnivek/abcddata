@@ -1,6 +1,6 @@
 Package: abcddata
 Title: Data Preparation for the ABCD® Study
-Version: 0.0.5
+Version: 0.0.6
 Authors@R: 
     person( "Kevin", "Potter", , "kevin.w.potter@gmail.com", 
     role = c("aut", "cre"),

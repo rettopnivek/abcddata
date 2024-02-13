@@ -3,11 +3,59 @@
 # email: kevin.w.potter@gmail.com
 # Please email me directly if you
 # have any questions or comments
-# Last updated 2024-02-09
+# Last updated 2024-02-13
 
 # Table of contents
-
-
+# 1) Creation of base data frames
+#   1.1) abcddata_initialize_long_form
+#     1.1.1) Load in data
+#     1.1.2) Initialize output
+#     1.1.3) Add variables [Base]
+#     1.1.4) Add variables [Genetics]
+#     1.1.5) Add variables [Discovery/Validation]
+#     1.1.6) Additional processing
+#     1.1.4) Codebook entries
+#     1.1.5) Output
+# 2) Additional variables
+#   2.1) abcddata_add.sample_characteristics
+#     2.1.1) Load in data
+#     2.1.2) Recode variables
+#       2.1.2.1) Sex at birth
+#       2.1.2.2) Gender
+#       2.1.2.3) Race
+#       2.1.2.4) Ethnicity
+#       2.1.2.5) Income
+#       2.1.2.6) Marital status
+#       2.1.2.7) Parental employment
+#       2.1.2.8) Parental education
+#     2.1.3) Add variables
+#     2.1.4) Additional processing
+#     2.1.5) Codebook entries
+#     2.1.6) Output
+#   2.2) abcddata_add.UPPS
+#     2.2.1) Load in data
+#     2.2.2) Individual items
+#     2.2.3) Summed scores for subscales
+#     2.2.4) Codebook entries
+#   2.3) abcddata_add.substance_use
+#     2.3.1) Load in data
+#     2.3.2) Variables for heard of items
+#     2.3.3) Variables for experimentation
+#     2.3.4) Variables for initiation
+#     2.3.5) Update columns
+#     2.3.6) Carry forward use from prior years
+#     2.3.7) Overall substance use
+#     2.3.8) Codebook entries
+#   2.4) abcddata_add.BIS_BAS
+#     2.4.1) Load in data
+#     2.4.2) Individual items
+#     2.4.3) Summed scores for subscales
+#     2.4.4) Codebook entries
+#   2.5) abcddata_add.CBCL
+#     2.5.1) Load in data
+#     2.5.2) Individual items
+#     2.5.3) Summed scores for subscales
+#     2.5.4) Codebook entries
 
 #### 1) Creation of base data frames ####
 
@@ -1000,7 +1048,7 @@ abcddata_add.sample_characteristics <- function(
   ]
 
   # Collapse categories due to small cell counts
-  dtf_demo$recoded.combined_income_collapsed_8 <- abcddata_replace(
+  dtf_demo$recoded.combined_income_collapsed_7 <- abcddata_replace(
     dtf_demo$recoded.combined_income,
     c(
       'Less than $5000', # 1
@@ -1039,8 +1087,8 @@ abcddata_add.sample_characteristics <- function(
 
       '$200k+', # 10
 
-      'Do not know', # 999
-      'Refuse to answer' # 777
+      'Not provided', # 999
+      'Not provided' # 777
     )
   )
 
@@ -1126,7 +1174,7 @@ abcddata_add.sample_characteristics <- function(
   ]
 
   # Collapse categories due to small cell counts
-  dtf_demo$recoded.marital_status_collapsed_4 <- abcddata_replace(
+  dtf_demo$recoded.marital_status_collapsed_3 <- abcddata_replace(
     dtf_demo$recoded.marital_status,
     c(
       'Married', # 1
@@ -1145,12 +1193,22 @@ abcddata_add.sample_characteristics <- function(
       'Other family type', # 4
       'Other family type', # 5
       'Other family type', # 6
-      'Do not know', # 999
-      'Refuse to answer' # 777
+      'Not provided', # 999
+      'Not provided' # 777
     )
   )
 
   #### 2.1.2.7) Parental employment ####
+
+  # Indicator for whether 1 or 2 parents
+  lgc_2_parents <-
+    dtf_demo$recoded.marital_status %in% c(
+      'Married', 'Living with partner'
+    )
+  lgc_1_parent <-
+    dtf_demo$recoded.marital_status %in% c(
+      'Widowed', 'Divorced', 'Separated', 'Never married'
+    )
 
   dtf_demo$recoded.employment_status_baseline <- abcddata_replace(
     dtf_demo$demo_prnt_empl_v2,
@@ -1256,32 +1314,56 @@ abcddata_add.sample_characteristics <- function(
   # Both in labor force
   lgc_cases <-
     dtf_demo$recoded.employment_status %in% c(
-      'Working now - Full/part time'
+      'Working now - Full/part time',
+      'Sick leave',
+      'Maternity leave',
+      'Student'
     ) &
     dtf_demo$recoded.employment_status_partner %in% c(
-      'Working now - Full/part time'
+      'Working now - Full/part time',
+      'Sick leave',
+      'Maternity leave',
+      'Student'
     )
   dtf_demo$recoded.employment_status_collapsed[lgc_cases] <-
-    'Both in labor force'
+    'Both parents in labor force'
+  dtf_demo$recoded.employment_status_collapsed[
+    lgc_cases & lgc_1_parent
+  ] <- 'Lone parent in labor force'
 
   # One in labor force
   lgc_cases <-
     ( dtf_demo$recoded.employment_status %in% c(
-        'Working now - Full/part time'
+        'Working now - Full/part time',
+        'Sick leave',
+        'Maternity leave',
+        'Student'
       ) &
       !dtf_demo$recoded.employment_status_partner %in% c(
-        'Working now - Full/part time'
+        'Working now - Full/part time',
+        'Sick leave',
+        'Maternity leave',
+        'Student'
       )
     ) | (
       !dtf_demo$recoded.employment_status %in% c(
-        'Working now - Full/part time'
+        'Working now - Full/part time',
+        'Sick leave',
+        'Maternity leave',
+        'Student'
       ) &
       dtf_demo$recoded.employment_status_partner %in% c(
-        'Working now - Full/part time'
+        'Working now - Full/part time',
+        'Sick leave',
+        'Maternity leave',
+        'Student'
       )
     )
   dtf_demo$recoded.employment_status_collapsed[lgc_cases] <-
-    'One in labor force'
+    'One of parents in labor force'
+  dtf_demo$recoded.employment_status_collapsed[
+    lgc_cases & lgc_1_parent
+  ] <- 'Lone parent in labor force'
 
   # Missing values
   lgc_cases <-
@@ -1393,19 +1475,19 @@ abcddata_add.sample_characteristics <- function(
         'recoded.ethnicity',
       SMP.CHR.PS.Income.Combined =
         'recoded.combined_income',
-      SMP.CHR.PS.Income.Combined.Collapsed_8 =
-        'recoded.combined_income_collapsed_8',
+      SMP.CHR.PS.Income.Combined.Collapsed_7 =
+        'recoded.combined_income_collapsed_7',
       SMP.CHR.PS.Income.Combined.Collapsed_4 =
-        'recoded.combined_income_collapsed_4',
+        'recoded.combined_income_collapsed_7',
       SMP.CHR.PS.Marital_status =
         'recoded.marital_status',
-      SMP.CHR.PS.Marital_status.Collapsed_4 =
-        'recoded.marital_status_collapsed_4',
+      SMP.CHR.PS.Marital_status.Collapsed_3 =
+        'recoded.marital_status_collapsed_3',
       SMP.CHR.PS.Employment_status =
         'recoded.employment_status',
       SMP.CHR.PS.Employment_status_partner =
         'recoded.employment_status_partner',
-      SMP.CHR.PS.Employment_status.Collapsed_3 =
+      SMP.CHR.PS.Employment_status.Collapsed_4 =
         'recoded.employment_status_collapsed',
       SMP.CHR.PS.Highest_education_level =
         'recoded.education'
@@ -1504,13 +1586,43 @@ abcddata_add.sample_characteristics <- function(
       )
     ),
 
-    SMP.CHR.PS.Income.Combined.Collapsed_8 = list(
+    SMP.CHR.PS.Income.Combined.Collapsed_7 = list(
       chr_description = paste0(
-        "The combined income of the parents - collapsed to 8 categories"
+        "The combined income of the parents - collapsed to 7 categories"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          'Less than $5000',
+          '$5000 through $11999',
+          '$12000 through $15999',
+          '$16000 through $24999',
+          '$25000 through $34999',
+          '$35000 through $49999',
+          '$50000 through $74999',
+          '$75000 through $99999',
+          '$100000 through $199999',
+          '$200000 and greater',
+          'Do not know',
+          'Refuse to answer'
+        ),
+        additional_content = c(
+          '<$25k',
+          '',
+          '',
+          '',
+          '$25k - $49k',
+          '',
+          '$50k - $74k',
+          '$75k - $99k',
+          '$100k - $199k',
+          '$200k+',
+          'Not provided',
+          ''
+        )
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SMP.CHR.PS.Income.Combined.Collapsed_8',
+        'SMP.CHR.PS.Income.Combined.Collapsed_7',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -1529,6 +1641,36 @@ abcddata_add.sample_characteristics <- function(
         'SMP.CHR.PS.Income.Combined.Collapsed_4',
         'SSS.DBL.GD.Year'
       ),
+      lst_values_and_labels = list(
+        content = c(
+          'Less than $5000',
+          '$5000 through $11999',
+          '$12000 through $15999',
+          '$16000 through $24999',
+          '$25000 through $34999',
+          '$35000 through $49999',
+          '$50000 through $74999',
+          '$75000 through $99999',
+          '$100000 through $199999',
+          '$200000 and greater',
+          'Do not know',
+          'Refuse to answer'
+        ),
+        additional_content = c(
+          '<$50k',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '$50k - $99k',
+          '',
+          '$100k+',
+          '',
+          'Not provided',
+          ''
+        )
+      ),
       chr_source_files = chr_files[1],
       chr_source_variables = c(
         "demo_comb_income_v2",
@@ -1543,6 +1685,44 @@ abcddata_add.sample_characteristics <- function(
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
         'SMP.CHR.PS.Marital_status',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        "demo_prnt_marital_v2",
+        "demo_prnt_marital_v2_l"
+      )
+    ),
+
+    SMP.CHR.PS.Marital_status.Collapsed_3 = list(
+      chr_description = paste0(
+        "The marital status of the parents - collapsed to 3 categories"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          'Married',
+          'Widowed',
+          'Divorced',
+          'Separated',
+          'Never married',
+          'Living with partner',
+          'Do not know',
+          'Refuse to answer'
+        ),
+        additional_content = c(
+          'Married',
+          'Other family type',
+          '',
+          '',
+          '',
+          '',
+          'Not provided',
+          ''
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SMP.CHR.PS.Marital_status.Collapsed_3',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -1924,6 +2104,60 @@ abcddata_add.UPPS <- function(
 }
 
 #### 2.3) abcddata_add.substance_use ####
+#' Add Data on Substance Use
+#'
+#' Function to add data on whether children engaged
+#' in any substance use. Two type of substance use
+#' are defined as per Sullivan et al. (2022):
+#' experimentation (low-level use, such as alcohol
+#' sipping, nicotine/cannabis puffing or trying)
+#' versus initiation (one or more standard drinks
+#' of alcohol, more than a puff or taste of
+#' nicotine/cannabis, any other type of substance use).
+#' Substances were categorized into four types:
+#' alcohol, nicotine or tobacco, cannabis, and
+#' other substances (which consisted of: synthetic MJ,
+#' bittamugen or byphoditin, sniffing products to get
+#' high, prescription med abuse, cocaine, bath salts,
+#' meth, ecstasy, ketamine, GBH, heroin, hallucinogens,
+#' mushrooms, salvia, or steroids). See Lisdahl et al.
+#' (2018) for more details on how the ABCD® study collected
+#' data on substance use.
+#'
+#' @param dtf_ABCD_long_form A data frame, output from
+#'   the [abcddata::abcddata_initialize_long_form]
+#'   function.
+#' @param chr_files A character vector with
+#'   the file name for the substance use data.
+#' @param chr_paths A character vector with
+#'   the associated folder path for the
+#'   substance use data.
+#' @param lgc_progress A logical value; if
+#'   \code{TRUE} displays the progress of the
+#'   data processing.
+#'
+#' @references
+#' Lisdahl, K. M., Sher, K. J., Conway, K. P., Gonzalez, R.,
+#'   Feldstein Ewing, S. W., Nixon, S. J., Tapert, S., Bartsch,
+#'   H., Goldstein, R. Z., & Heitzeg, M. (2018). Adolescent
+#'   brain cognitive development (ABCD) study: Overview of
+#'   substance use assessment methods. Developmental
+#'   Cognitive Neuroscience, 32, 80–96.
+#'   https://doi.org/10.1016/j.dcn.2018.02.007
+#'
+#' Sullivan, R. M., Wade, N. E., Wallace, A. L., Tapert,
+#'   S. F., Pelham, W. E., Brown, S. A., Cloak, C. C.,
+#'   Ewing, S. W. F., Madden, P. A. F., Martz, M. E.,
+#'   Ross, J. M., Kaiver, C. M., Wirtz, H. G., Heitzeg,
+#'   M. M., & Lisdahl, K. M. (2022). Substance use patterns
+#'   in 9 to 13-year-olds: Longitudinal findings from the
+#'   Adolescent Brain Cognitive Development (ABCD) study.
+#'   Drug and Alcohol Dependence Reports, 5, 1–12.
+#'   https://doi.org/10.1016/j.dadr.2022.100120
+#'
+#' @returns A data frame.
+#'
+#' @export
 
 abcddata_add.substance_use <- function(
     dtf_ABCD_long_form,
@@ -2454,7 +2688,7 @@ abcddata_add.BIS_BAS <- function(
 
   dtf_ABCD_long_form <- abcddata_merge_data_sets(
     dtf_ABCD_long_form,
-    dtf_upps,
+    dtf_bis_bas,
     list(
       c( 'IDS.CHR.GD.Participant', 'src_subject_id' ),
       c( 'SSS.CHR.GD.Time_point', 'eventname' )
@@ -2684,6 +2918,65 @@ abcddata_add.BIS_BAS <- function(
 }
 
 #### 2.5) abcddata_add.CBCL ####
+#' Add Data for the Child Behavior Checklist
+#'
+#' Function to add individual items and summed scores
+#' for subscales of the Child Behavior Checklist (CBCL;
+#' Achenbach, 2009) for ages 6-18. The ABCD® study administered
+#' 112 items (note item 56 is broken into 8 sub-questions)
+#' with a response format of 0 (Not true) to 2 (Very
+#' true/often true). The study excluded the final
+#' 113th item which which involved free text entry. There
+#' were 8 syndrome subscales (Anxious/Depressed with 13 items,
+#' Withdrawn/Depressed with 8 items, Somatic Complaints with
+#' 11 items, Social Problems with 11 items, Thought Problems
+#' with 15 items, Attention Problems with 10 items,
+#' Rule-Breaking Behavior with 17 items, and
+#' Aggressive Behavior with 18 items). Five of the
+#' subscales group into two higher order factors: Internalizing
+#' (Anxious/Depressed, Withdrawn/Depressed, and Somatic
+#' Complaints) and Externalizing (Rule-Breaking Behavior,
+#' Aggressive Behavior). A total score can also be computed
+#' using all 112 items including the 16 items not included
+#' in any subscale. The questions can also be
+#' split into 6 subscales oriented for the Diagnostic and
+#' Statistical Manual of Mental Disorders (Affective Problems,
+#' Anxiety Problems, Somatic Problems, Attention-Deficit-Hyperactive
+#' Disorder, Oppositional Defiant Problems, Conduct Problems).
+#' See Barch et al. (2018) for further details on the use of
+#' the CBCL scale in the  ABCD® study.
+#'
+#' @param dtf_ABCD_long_form A data frame, output from
+#'   the [abcddata::abcddata_initialize_long_form]
+#'   function.
+#' @param chr_files A character vector with
+#'   the file name for the data with responses
+#'   to the CBCL items.
+#' @param chr_paths A character vector with
+#'   the associated folder path for the
+#'   CBCL responses file.
+#' @param lgc_progress A logical value; if
+#'   \code{TRUE} displays the progress of the
+#'   data processing.
+#'
+#' @references
+#' Achenbach, T. M. (2009). The Achenbach System of Empirically Based
+#'   Assessment (ASEBA): Development, findings, theory and applications.
+#'   University of Vermont, Research Center for Children, Youth, and
+#'   Families.
+#'
+#' Barch, D. M., Albaugh, M. D., Avenevoli, S., Chang, L., Clark,
+#'   D. B., Glantz, M. D., Hudziak, J. J., Jernigan, T. L.,
+#'   Tapert, S. F., Yurgelun-Todd, D., Alia-Klein, N., Potter,
+#'   A. S., Paulus, M. P., Prouty, D., Zucker, R. A., & Sher,
+#'   K. J. (2018). Demographic, physical and mental health
+#'   assessments in the Adolescent Brain and Cognitive Development
+#'   study: Rationale and description. Developmental Cognitive
+#'   Neuroscience, 32, 55–66. https://doi.org/10.1016/j.dcn.2017.10.010
+#'
+#' @returns A data frame.
+#'
+#' @export
 
 abcddata_add.CBCL <- function(
     dtf_ABCD_long_form,
@@ -2703,7 +2996,7 @@ abcddata_add.CBCL <- function(
     header = TRUE
   )
 
-  #### 2.5.2) Individual items ####
+  #### 2.5.2) Individual items and subscales ####
 
   int_items <- 1:112
 
@@ -2725,14 +3018,68 @@ abcddata_add.CBCL <- function(
   chr_items[1:9] <- gsub(
     'cbcl_q', 'cbcl_q0', chr_items[1:9], fixed = TRUE
   )
-  # For item 56 add options a - h
-  chr_items <- chr_items[ chr_items != 'cbcl_q56_p']
-  chr_items <- c(
-    chr_items,
-    paste0( 'cbcl_q56', c( 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ),
-            '_p' )
+  names( chr_items ) <- paste0(
+    'QST.INT.PC.CBCL.Item_', int_items
   )
-  chr_items <- sort( chr_items )
+  # For item 56 add options a - h
+  chr_item_56 <- paste0(
+    'cbcl_q56',
+    c( 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ),
+    '_p'
+  )
+  names( chr_item_56 ) <- paste0(
+    'QST.INT.PC.CBCL.Item_56',
+    c( 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' )
+  )
+
+  chr_items <- c(
+    chr_items[ int_items < 56 ],
+    chr_item_56,
+    chr_items[ int_items > 56 ]
+  )
+
+  chr_syndrome_scales <- c(
+    QST.INT.PC.CBCL.Syndrome_anxious_depressed =
+      'cbcl_scr_syn_anxdep_r',
+    QST.INT.PC.CBCL.Syndrome_withdraw_depressed =
+      'cbcl_scr_syn_withdep_r',
+    QST.INT.PC.CBCL.Syndrome_somatic_complaints =
+      'cbcl_scr_syn_somatic_r',
+    QST.INT.PC.CBCL.Syndrome_social_problems =
+      'cbcl_scr_syn_social_r',
+    QST.INT.PC.CBCL.Syndrome_thought_problems =
+    'cbcl_scr_syn_thought_r',
+    QST.INT.PC.CBCL.Syndrome_attention_problems =
+      'cbcl_scr_syn_attention_r',
+    QST.INT.PC.CBCL.Syndrome_rule_breaking_behavior =
+      'cbcl_scr_syn_rulebreak_r',
+    QST.INT.PC.CBCL.Syndrome_aggressive_behavior =
+      'cbcl_scr_syn_aggressive_r'
+  )
+
+  chr_higher_order_scales <- c(
+    QST.INT.PC.CBCL.Higher_order_internalizing =
+      'cbcl_scr_syn_internal_r',
+    QST.INT.PC.CBCL.Higher_order_externalizing =
+      'cbcl_scr_syn_external_r'
+  )
+
+  chr_DSM_scales <- c(
+    QST.INT.PC.CBCL.DSM_affective_problems =
+      'cbcl_scr_dsm5_depress_r',
+    QST.INT.PC.CBCL.DSM_anxiety_problems =
+      'cbcl_scr_dsm5_anxdisord_r',
+    QST.INT.PC.CBCL.DSM_somatic_problems =
+      'cbcl_scr_dsm5_somaticpr_r',
+    QST.INT.PC.CBCL.DSM_ADHD =
+      'cbcl_scr_syn_anxdep_r',
+    QST.INT.PC.CBCL.DSM_oppositional_defiant_problems =
+      'cbcl_scr_dsm5_opposit_r',
+    QST.INT.PC.CBCL.DSM_conduct_problems =
+      'cbcl_scr_dsm5_conduct_r'
+  )
+
+  #### 2.5.3) Add variables ####
 
   dtf_ABCD_long_form <- abcddata_merge_data_sets(
     dtf_ABCD_long_form,
@@ -2741,100 +3088,115 @@ abcddata_add.CBCL <- function(
       c( 'IDS.CHR.GD.Participant', 'src_subject_id' ),
       c( 'SSS.CHR.GD.Time_point', 'eventname' )
     ),
-    chr_items,
+    c(
+      chr_items,
+      chr_syndrome_scales,
+      chr_higher_order_scales,
+      chr_DSM_scales
+    ),
     lgc_progress = lgc_progress
   )
 
-  #### 2.5.3) Summed scores for subscales ####
-
   #### 2.5.4) Codebook entries ####
+
+  int_entries <- c(
+    chr_items,
+    chr_syndrome_scales,
+    chr_higher_order_scales,
+    chr_DSM_scales
+  ) |> length()
+
+  # Initialize list for codebook entries
+  # 20 items, 4 subscales
+  lst_codebook_entries <- lapply(
+    1:int_entries, function(x) return(NULL)
+  )
+
+  chr_columns <- c(
+    names(chr_items),
+    names(chr_syndrome_scales),
+    names(chr_higher_order_scales),
+    names(chr_DSM_scales)
+  )
+  names(lst_codebook_entries) <- chr_columns
+
+  # Timepoints at which data were collected
+  lst_collected_over <- abcddata_codebook_collected_over(
+    dtf_ABCD_long_form,
+    chr_columns[1],
+    'SSS.DBL.GD.Year'
+  )
+
+  # For confirmation based on summed scores
+  lst_syndrome_scales <- list(
+    # Anxious/depressed
+    cbcl_scr_syn_anxdep_r = c(
+      '14', '29', '30', '31', '32',
+       '33', '35', '45', '50', '52',
+       '71', '91', '112'
+    ),
+    # Withdrawn/depressed
+    cbcl_scr_syn_withdep_r = c(
+      '05', '42', '65', '69', '75',
+      '102', '103', '111'
+    ),
+    # Somatic complaints
+    cbcl_scr_syn_somatic_r = c(
+      '47', '49', '51', '54', '56a',
+      '56b', '56c', '56d', '56e', '56f',
+      '56g'
+    ),
+    # Social problems
+    cbcl_scr_syn_social_r = c(
+      '11', '12', '25', '27', '34',
+      '36', '38', '48', '62', '64',
+      '79'
+    ),
+    # Thought problems
+    cbcl_scr_syn_thought_r = c(
+      '09', '18', '40', '46', '58',
+      '59', '60', '66', '70', '76',
+      '83', '84', '85', '92', '100'
+    ),
+    # Attention problems
+    cbcl_scr_syn_attention_r = c(
+      '01', '04', '08', '10', '13',
+      '17', '41', '61', '78', '80'
+    ),
+    # Rule-breaking behavior
+    cbcl_scr_syn_rulebreak_r = c(
+      '02', '26', '28', '39', '43',
+      '63', '67', '72', '73', '81',
+      '82', '90', '96', '99', '101',
+      '105', '106'
+    ),
+    # Aggressive behavior
+    cbcl_scr_syn_aggressive_r = c(
+      '03', '16', '19', '20', '21',
+      '22', '23', '37', '57', '68',
+      '86', '87', '88', '89', '94',
+      '95', '97', '104'
+    )
+
+  )
+
+  # # Loop over syndrome scales
+  # for (k in 1:8) {
+  #   chr_cur_scale <- names( lst_syndrome_scales )[k]
+  #   chr_cur_items <- paste0( 'cbcl_q', lst_syndrome_scales[[k]], '_p' )
+  #   lgc_missing <- is.na( dtf_cbcl[[chr_cur_scale]] ) |
+  #     apply( dtf_cbcl[, chr_cur_items], 1, function(x) any( is.na(x) ) )
+  #   all( dtf_cbcl[[chr_cur_scale]][!lgc_missing] ==
+  #          rowSums( dtf_cbcl[!lgc_missing, chr_cur_items] ) ) |>
+  #     print()
+  # }
 
   # Individual items
   chr_item_content <- c(
 
-    Item_1 = paste0(
-      "Acts too young for their age"
-    ),
-    Item_2 = paste0(
-      "Drinks alcohol without parent approval"
-    ),
-    Item_3 = paste0(
-      "Argues a lot"
-    ),
-    Item_4 = paste0(
-      "Fails to finish things they start"
-    ),
-    Item_5 = paste0(
-      "There is very little they enjoy"
-    ),
-    Item_6 = paste0(
-      "Bowel movements outside toilet"
-    ),
-    Item_7 = paste0(
-      "Bragging or boasting"
-    ),
-    Item_8 = paste0(
-      "Cannot concentrate or cannot pay attention for long"
-    ),
-    Item_9 = paste0(
-      "Cannot get their mind off certain thoughts or obsessions"
-    ),
-    Item_10 = paste0(
-      "Cannot sit still - restless or hyperactive"
-    ),
-    Item_11 = paste0(
-      "Clings to adults or too dependent"
-    ),
-    Item_12 = paste0(
-      "Complains of loneliness"
-    ),
-    Item_13 = paste0(
-      "Confused or seems to be in a fog"
-    ),
+    # Anxious/depressed (13 items; Confirmed)
     Item_14 = paste0(
       "Cries a lot"
-    ),
-    Item_15 = paste0(
-      "Cruel to animals"
-    ),
-    Item_16 = paste0(
-      "Cruelty or bullying or meanness to others"
-    ),
-    Item_17= paste0(
-      "Daydreams or gets lost in their thoughts"
-    ),
-    Item_18 = paste0(
-      "Deliberately harms self or attempts suicide"
-    ),
-    Item_19 = paste0(
-      "Demands a lot of attention"
-    ),
-    Item_20 = paste0(
-      "Destroys their own things"
-    ),
-    Item_21= paste0(
-      "Destroys things belonging to their to their family or others"
-    ),
-    Item_22 = paste0(
-      "Disobedient at home"
-    ),
-    Item_23 = paste0(
-      "Disobedient at school"
-    ),
-    Item_24 = paste0(
-      "Does not eat well"
-    ),
-    Item_25 = paste0(
-      "Does not get along with other kids"
-    ),
-    Item_26 = paste0(
-      "Does not seem to feel guilty after misbehaving"
-    ),
-    Item_27 = paste0(
-      "Easily jealous"
-    ),
-    Item_28 = paste0(
-      "Breaks rules at home or school or elsewhere"
     ),
     Item_29 = paste0(
       "Fears certain animals or situations or places other than school"
@@ -2851,71 +3213,70 @@ abcddata_add.CBCL <- function(
     Item_33 = paste0(
       "Feels or complains that no one loves them"
     ),
-    Item_34 = paste0(
-      "Feels others are out to get them"
-    ),
     Item_35 = paste0(
       "Feels worthless or inferior"
-    ),
-    Item_36 = paste0(
-      "Gets hurt a lot - accident prone"
-    ),
-    Item_37 = paste0(
-      "Gets in many fights"
-    ),
-    Item_38 = paste0(
-      "Gets teased a lot"
-    ),
-    Item_39 = paste0(
-      "Hangs around with others who get in trouble"
-    ),
-    Item_40 = paste0(
-      "Hears sound or voices that are not there"
-    ),
-    Item_41 = paste0(
-      "Impulsive or acts without thinking"
-    ),
-    Item_42 = paste0(
-      "Would rather be alone than with others"
-    ),
-    Item_43 = paste0(
-      "Lying or cheating"
-    ),
-    Item_44 = paste0(
-      "Bits fingernails"
     ),
     Item_45 = paste0(
       "Nervous or highstrung or tense"
     ),
-    Item_46 = paste0(
-      "Nervous movements or twitching"
-    ),
-    Item_47 = paste0(
-      "Nightmares"
-    ),
-    Item_48 = paste0(
-      "Not liked by other kids"
-    ),
-    Item_49 = paste0(
-      "Constipated - does not move bowels"
-    ),
     Item_50 = paste0(
       "Too fearful or anxious"
-    ),
-    Item_51 = paste0(
-      "Feels dizzy or lightheaded"
     ),
     Item_52 = paste0(
       "Feels too guilty"
     ),
-    Item_53 = paste0(
-      "Overeating"
+    Item_71 = paste0(
+      "Self-conscious or easily embarrassed"
+    ),
+    Item_91 = paste0(
+      "Talks about killing self"
+    ),
+    Item_112 = paste0(
+      "Worries"
+    ),
+    # Missing items from old scoring guide
+    # Hurt when criticized
+    # Anxious to please
+    # Fears mistakes
+
+    # Withdrawn/depressed (8 items; Confirmed)
+    Item_5 = paste0(
+      "There is very little they enjoy"
+    ),
+    Item_42 = paste0(
+      "Would rather be alone than with others"
+    ),
+    Item_65 = paste0(
+      "Refuses to talk"
+    ),
+    Item_69 = paste0(
+      "Secretive - keeps things to self"
+    ),
+    Item_75 = paste0(
+      "Too shy or timid"
+    ),
+    Item_102 = paste0(
+      "Underactive or slow moving or lacks energy"
+    ),
+    Item_103 = paste0(
+      "Unhappy or sad or depressed"
+    ),
+    Item_111 = paste0(
+      "Withdrawn - does not get involved with others"
+    ),
+
+    # Somatic complaints (11 items; Confirmed)
+    Item_47 = paste0(
+      "Nightmares"
+    ),
+    Item_49 = paste0(
+      "Constipated - does not move bowels"
+    ),
+    Item_51 = paste0(
+      "Feels dizzy or lightheaded"
     ),
     Item_54 = paste0(
       "Overtired without good reason"
-    ),
-    Item_55 = paste0(
-      "Overweight"
     ),
     Item_56a = paste0(
       "Aches or pains - not stomach or headaches"
@@ -2938,11 +3299,54 @@ abcddata_add.CBCL <- function(
     Item_56g = paste0(
       "Vomiting - throwing up"
     ),
-    Item_56h = paste0(
-      "Other - physical problems without knowing physical cause"
+
+    # Social problems (11 items; Confirmed)
+    Item_11 = paste0(
+      "Clings to adults or too dependent"
     ),
-    Item_57 = paste0(
-      "Physically attacks people"
+    Item_12 = paste0(
+      "Complains of loneliness"
+    ),
+    Item_25 = paste0(
+      "Does not get along with other kids"
+    ),
+    Item_27 = paste0(
+      "Easily jealous"
+    ),
+    Item_34 = paste0(
+      "Feels others are out to get them"
+    ),
+    Item_36 = paste0(
+      "Gets hurt a lot - accident prone"
+    ),
+    Item_38 = paste0(
+      "Gets teased a lot"
+    ),
+    Item_48 = paste0(
+      "Not liked by other kids"
+    ),
+    Item_62 = paste0(
+      "Poorly coordinated or clumsy"
+    ),
+    Item_64 = paste0(
+      "Prefers being with younger kids"
+    ),
+    Item_79 = paste0(
+      "Speech problems"
+    ),
+
+    # Thought problems (15 items; Confirmed)
+    Item_9 = paste0(
+      "Cannot get their mind off certain thoughts or obsessions"
+    ),
+    Item_18 = paste0(
+      "Deliberately harms self or attempts suicide"
+    ),
+    Item_40 = paste0(
+      "Hears sound or voices that are not there"
+    ),
+    Item_46 = paste0(
+      "Nervous movements or twitching"
     ),
     Item_58 = paste0(
       "Picks nose or skin or other parts of body"
@@ -2953,71 +3357,14 @@ abcddata_add.CBCL <- function(
     Item_60 = paste0(
       "Plays with own sex parts too much"
     ),
-    Item_61 = paste0(
-      "Poor school work"
-    ),
-    Item_62 = paste0(
-      "Poorly coordinated or clumsy"
-    ),
-    Item_63 = paste0(
-      "Prefers being with older kids"
-    ),
-    Item_64 = paste0(
-      "Prefers being with younger kids"
-    ),
-    Item_65 = paste0(
-      "Refuses to talk"
-    ),
     Item_66 = paste0(
       "Repeats certain acts over and over - compulsions"
-    ),
-    Item_67 = paste0(
-      "Runs away from home"
-    ),
-    Item_68 = paste0(
-      "Screams a lot"
-    ),
-    Item_69 = paste0(
-      "Secretive - keeps things to self"
     ),
     Item_70 = paste0(
       "Sees things that are not there"
     ),
-    Item_71 = paste0(
-      "Self-conscious or easily embarrassed"
-    ),
-    Item_72 = paste0(
-      "Sets fires"
-    ),
-    Item_73 = paste0(
-      "Sexual problems"
-    ),
-    Item_74 = paste0(
-      "Showing off or clowning"
-    ),
-    Item_75 = paste0(
-      "Too shy or timid"
-    ),
     Item_76 = paste0(
       "Sleeps less than most kids"
-    ),
-    Item_77 = paste0(
-      "Sleeps more than most kids during day and/or night"
-    ),
-    Item_78 = paste0(
-      "Inattentive or easily distracted"
-    ),
-    Item_79 = paste0(
-      "Speech problems"
-    ),
-    Item_80 = paste0(
-      "Stares blankly"
-    ),
-    Item_81 = paste0(
-      "Steals at home"
-    ),
-    Item_82 = paste0(
-      "Steals outside the home"
     ),
     Item_83 = paste0(
       "Stores up too many things they do not need"
@@ -3027,6 +3374,143 @@ abcddata_add.CBCL <- function(
     ),
     Item_85 = paste0(
       "Strange ideas"
+    ),
+    Item_92 = paste0(
+      "Talks or walks in sleep"
+    ),
+    Item_100 = paste0(
+      "Trouble sleeping"
+    ),
+
+    # Attention problems (10 items; Confirmed)
+    Item_1 = paste0(
+      "Acts too young for their age"
+    ),
+    Item_4 = paste0(
+      "Fails to finish things they start"
+    ),
+    Item_8 = paste0(
+      "Cannot concentrate or cannot pay attention for long"
+    ),
+    Item_10 = paste0(
+      "Cannot sit still - restless or hyperactive"
+    ),
+    Item_13 = paste0(
+      "Confused or seems to be in a fog"
+    ),
+    Item_17 = paste0(
+      "Daydreams or gets lost in their thoughts"
+    ),
+    Item_41 = paste0(
+      "Impulsive or acts without thinking"
+    ),
+    Item_61 = paste0(
+      "Poor school work"
+    ),
+    Item_78 = paste0(
+      "Inattentive or easily distracted"
+    ),
+    Item_80 = paste0(
+      "Stares blankly"
+    ),
+    # Missing items from old scoring guide
+    # Underachieving
+    # Fails to carry out tasks
+    # Odd noises
+    # Fidgets
+    # Difficulty with direction
+    # Disturbs others
+    # Difficulty learning
+    # Apathetic
+    # Disrupts discipline
+    # Messy work
+    # Irresponsible
+
+    # Rule-breaking behavior (17 items; Confirmed)
+    Item_2 = paste0(
+      "Drinks alcohol without parent approval"
+    ),
+    Item_26 = paste0(
+      "Does not seem to feel guilty after misbehaving"
+    ),
+    Item_28 = paste0(
+      "Breaks rules at home or school or elsewhere"
+    ),
+    Item_39 = paste0(
+      "Hangs around with others who get in trouble"
+    ),
+    Item_43 = paste0(
+      "Lying or cheating"
+    ),
+    Item_63 = paste0(
+      "Prefers being with older kids"
+    ),
+    Item_67 = paste0(
+      "Runs away from home"
+    ),
+    Item_72 = paste0(
+      "Sets fires"
+    ),
+    Item_73 = paste0(
+      "Sexual problems"
+    ),
+    Item_81 = paste0(
+      "Steals at home"
+    ),
+    Item_82 = paste0(
+      "Steals outside the home"
+    ),
+    Item_90 = paste0(
+      "Swearing or obscene language"
+    ),
+    Item_96 = paste0(
+      "Thinks about sex too much"
+    ),
+    # Tardy
+    Item_99 = paste0(
+      "Smokes or chews or sniffs tobacco"
+    ),
+    Item_101 = paste0(
+      "Truancy - skips school"
+    ),
+    Item_105 = paste0(
+      "Uses drugs for non-medical purposes - do not include ",
+      "alcohol or tobacco"
+    ),
+    Item_106 = paste0(
+      "Vandalism"
+    ),
+
+    # Aggressive behavior (18 items; Confirmed)
+    Item_3 = paste0(
+      "Argues a lot"
+    ),
+    Item_16 = paste0(
+      "Cruelty or bullying or meanness to others"
+    ),
+    Item_19 = paste0(
+      "Demands a lot of attention"
+    ),
+    Item_20 = paste0(
+      "Destroys their own things"
+    ),
+    Item_21 = paste0(
+      "Destroys things belonging to their family or others"
+    ),
+    Item_22 = paste0(
+      "Disobedient at home"
+    ),
+    Item_23 = paste0(
+      "Disobedient at school"
+    ),
+    Item_37 = paste0(
+      "Gets in many fights"
+    ),
+    Item_57 = paste0(
+      "Physically attacks people"
+    ),
+    Item_68 = paste0(
+      "Screams a lot"
     ),
     Item_86 = paste0(
       "Stubborn or sullen or irritable"
@@ -3040,57 +3524,59 @@ abcddata_add.CBCL <- function(
     Item_89 = paste0(
       "Suspicious"
     ),
-    Item_90 = paste0(
-      "Swearing or obscene language"
-    ),
-    Item_91 = paste0(
-      "Talks about killing self"
-    ),
-    Item_92 = paste0(
-      "Talks or walks in sleep"
-    ),
-    Item_93 = paste0(
-      "Talks too much"
-    ),
     Item_94 = paste0(
       "Teases a lot"
     ),
     Item_95 = paste0(
       "Temper tantrums or hot temper"
     ),
-    Item_96 = paste0(
-      "Thinks about sex too much"
-    ),
     Item_97 = paste0(
       "Threatens people"
-    ),
-    Item_98 = paste0(
-      "Thumb-sucking"
-    ),
-    Item_99 = paste0(
-      "Smokes or chews or sniffs tobacco"
-    ),
-    Item_100 = paste0(
-      "Trouble sleeping"
-    ),
-    Item_101 = paste0(
-      "Truancy - skips school"
-    ),
-    Item_102 = paste0(
-      "Underactive or slow moving or lacks energy"
-    ),
-    Item_103 = paste0(
-      "Unhappy or sad or depressed"
     ),
     Item_104 = paste0(
       "Unusually loud"
     ),
-    Item_105 = paste0(
-      "Uses drugs for non-medical purposes - do not include ",
-      "alcohol or tobacco"
+    # Missing items from old scoring guide
+    # Defiant
+    # Explosive
+    # Easily frustrated
+
+    # Not part of syndrome scales (16 items)
+    Item_6 = paste0(
+      "Bowel movements outside toilet"
     ),
-    Item_106 = paste0(
-      "Vandalism"
+    Item_7 = paste0(
+      "Bragging or boasting"
+    ),
+    Item_15 = paste0(
+      "Cruel to animals"
+    ),
+    Item_24 = paste0(
+      "Does not eat well"
+    ),
+    Item_44 = paste0(
+      "Bites fingernails"
+    ),
+    Item_53 = paste0(
+      "Overeating"
+    ),
+    Item_55 = paste0(
+      "Overweight"
+    ),
+    Item_56h = paste0(
+      "Other - physical problems without knowing physical cause"
+    ),
+    Item_74 = paste0(
+      "Showing off or clowning"
+    ),
+    Item_77 = paste0(
+      "Sleeps more than most kids during day and/or night"
+    ),
+    Item_93 = paste0(
+      "Talks too much"
+    ),
+    Item_98 = paste0(
+      "Thumb-sucking"
     ),
     Item_107 = paste0(
       "Wets self during the day"
@@ -3103,15 +3589,144 @@ abcddata_add.CBCL <- function(
     ),
     Item_110 = paste0(
       "Wishes to be of opposite sex"
-    ),
-    Item_111 = paste0(
-      "Withdrawn - does not get involved with others"
-    ),
-    Item_112 = paste0(
-      "Worries"
     )
 
   )
 
+  # Starting text for each item entry
+  chr_item_description <- paste0(
+    "Individual item for the CBCL scale: "
+  )
+
+  # Loop over individual items
+  for ( i in seq_along(chr_items) ) {
+
+    chr_current <- names(chr_items)[i]
+
+    int_index <-
+      ( names(chr_item_content) %in% gsub(
+        'QST.INT.PC.CBCL.Item_', '', chr_current, fixed = TRUE
+      ) ) |> which()
+
+    lst_codebook_entries[[i]] <- list(
+      chr_description =
+        paste0( chr_item_description, chr_item_content[int_index] ),
+      lst_values_and_labels = lst_response_format,
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables =
+
+    )
+
+    # Close 'Loop over individual items'
+  }
+
+
+  chr_syndrome_scales <- c(
+    QST.INT.PC.CBCL.Syndrome_anxious_depressed =
+      'cbcl_scr_syn_anxdep_r',
+    QST.INT.PC.CBCL.Syndrome_withdraw_depressed =
+      'cbcl_scr_syn_withdep_r',
+    QST.INT.PC.CBCL.Syndrome_somatic_complaints =
+      'cbcl_scr_syn_somatic_r',
+    QST.INT.PC.CBCL.Syndrome_social_problems =
+      'cbcl_scr_syn_social_r',
+    QST.INT.PC.CBCL.Syndrome_thought_problems =
+      'cbcl_scr_syn_thought_r',
+    QST.INT.PC.CBCL.Syndrome_attention_problems =
+      'cbcl_scr_syn_attention_r',
+    QST.INT.PC.CBCL.Syndrome_rule_breaking_behavior =
+      'cbcl_scr_syn_rulebreak_r',
+    QST.INT.PC.CBCL.Syndrome_aggressive_behavior =
+      'cbcl_scr_syn_aggressive_r'
+  )
+
+  chr_higher_order_scales <- c(
+    QST.INT.PC.CBCL.Higher_order_internalizing =
+      'cbcl_scr_syn_internal_r',
+    QST.INT.PC.CBCL.Higher_order_externalizing =
+      'cbcl_scr_syn_external_r'
+  )
+
+  chr_DSM_scales <- c(
+    QST.INT.PC.CBCL.DSM_affective_problems =
+      'cbcl_scr_dsm5_depress_r',
+    QST.INT.PC.CBCL.DSM_anxiety_problems =
+      'cbcl_scr_dsm5_anxdisord_r',
+    QST.INT.PC.CBCL.DSM_somatic_problems =
+      'cbcl_scr_dsm5_somaticpr_r',
+    QST.INT.PC.CBCL.DSM_ADHD =
+      'cbcl_scr_dsm5_adhd_r',
+    QST.INT.PC.CBCL.DSM_oppositional_defiant_problems =
+      'cbcl_scr_dsm5_opposit_r',
+    QST.INT.PC.CBCL.DSM_conduct_problems =
+      'cbcl_scr_dsm5_conduct_r'
+  )
+
+  # Description for each subscale
+  chr_subscale_description <- paste0(
+    "Summed scores for the ",
+    c(
+      # Syndrome scales
+      "Anxious/Depressed",
+      "Depressed",
+      "Somatic Complaints",
+      "Social Problems",
+      "Thought Problems",
+      "Attention Problems",
+      "Rule-Breakng Behavior",
+      "Aggressive Behavior",
+      # Higher order factors
+      'Externalizing',
+      'Internalizing',
+      # DSM-5 oriented scales
+      'DSM-5 Affective Problems',
+      'DSM-5 Anxiety Problems',
+      'DSM-5 Somatic Problems',
+      'DSM-5 ADHD',
+      'DSM-5 Oppositional Defiant Problems',
+      'DSM-5 Conduct Problems'
+    ),
+    " subscale from the CBCL ",
+    "scale. Higher scores indicate ",
+    "a greater degree of problematic behavior"
+  )
+
+  int_start <- length( chr_items)
+
+  # Loop over subscales
+  for ( i in seq_along(chr_subscale_description) ) {
+
+    lst_codebook_entries[[int_start + i]] <- list(
+      chr_description =
+        chr_subscale_description[i],
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        chr_syndrome_scales,
+        chr_higher_order_scales,
+        chr_DSM_scales
+      )[i]
+    )
+
+    # Close 'Loop over subscales'
+  }
+
+  # Loop over codebook entries
+  for ( l in seq_along(lst_codebook_entries) ) {
+
+    lst_arg <- lst_codebook_entries[[l]]
+    lst_arg$dtf_base <- dtf_ABCD_long_form
+    lst_arg$chr_column <- names( lst_codebook_entries )[l]
+
+    dtf_ABCD_long_form <- do.call(
+      abcddata_codebook_add_entry,
+      lst_arg
+    )
+
+    # Close 'Loop over codebook entries'
+  }
+
+  return( dtf_ABCD_long_form )
 }
 
