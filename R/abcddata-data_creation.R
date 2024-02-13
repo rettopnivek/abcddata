@@ -2070,15 +2070,17 @@ abcddata_add.UPPS <- function(
         chr_subscale_description[i],
       lst_collected_over = lst_collected_over,
       chr_source_files = chr_files[1],
-      chr_source_variables = chr_items[
+      chr_source_variables = paste0(
+        'upps',
         list(
           c( 7, 11, 17, 20 ),
           c( 15, 19, 22, 24 ),
           c( 6, 16, 23, 28 ),
           c( 12, 18, 21, 27 ),
           c( 35, 36, 37, 39 )
-        )[[i]]
-      ]
+        )[[i]],
+        '_y'
+      )
     )
 
     # Close 'Loop over individual items'
