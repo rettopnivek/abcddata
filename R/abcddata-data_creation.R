@@ -1588,7 +1588,7 @@ abcddata_add.sample_characteristics <- function(
   )
 
   dtf_demo$recoded.education_combined <- apply(
-    dtf_dem[, c( 'recoded.education_num',
+    dtf_demo[, c( 'recoded.education_num',
                  'recoded.education_partner_num') ],
     1,
     function(x) {
