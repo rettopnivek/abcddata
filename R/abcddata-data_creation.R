@@ -3157,9 +3157,11 @@ abcddata_add.substance_use <- function(
         additional_content = c(
           "",
           "Alcohol sipping or nicotine/tobacco/cannabis puff or taste",
-          "One or more alcohol standard drinks or more than a ",
-          "puff/taste of nicotine/tobacco/cannabis or any kind of ",
-          "use of other substances"
+          paste0(
+            "One or more alcohol standard drinks or more than a ",
+            "puff/taste of nicotine/tobacco/cannabis or any kind of ",
+            "use of other substances"
+          )
         )
       ),
       lst_collected_over = abcddata_codebook_collected_over(
