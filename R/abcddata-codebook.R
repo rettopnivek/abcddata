@@ -870,6 +870,32 @@ abcddata_codebook_display <- function(
       }
 
       # Close 'If no additional content'
+    } else {
+
+      # Loop over rows
+      for ( r in which(lgc_rows) ) {
+
+        # If no additional content
+        if ( dtf_codebook$Additional_content[r] == "" ) {
+
+          fun_display_text(
+            dtf_codebook$Content[r],
+            int_text_wrap
+          )
+
+          # Close 'If no additional content'
+        } else {
+
+          message( paste0( '  ', dtf_codebook$Content[r] ) )
+          message( paste0( '    ', dtf_codebook$Additional_content[r] ) )
+
+          # Close else for 'If no additional content'
+        }
+
+        # Close 'Loop over rows'
+      }
+
+      # Close else for 'If no additional content'
     }
 
     # Close 'Loop over content types'
