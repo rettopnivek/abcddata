@@ -2506,30 +2506,30 @@ abcddata_add.substance_use <- function(
 
   # Initialize columns
   # ALC = Alcohol
-  dtf_ABCD_long_form$SUB.CHR.CS.ALC.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.CS.ALC.Type_of_use <- ''
   # NCT = Nicotine or tobacco
-  dtf_ABCD_long_form$SUB.CHR.CS.NCT.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.CS.NCT.Type_of_use <- ''
   # CNN = Cannabis
-  dtf_ABCD_long_form$SUB.CHR.CS.CNN.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.CS.CNN.Type_of_use <- ''
   # OTH = Other substances
-  dtf_ABCD_long_form$SUB.CHR.CS.OTH.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.CS.OTH.Type_of_use <- ''
 
   #### 2.3.2) Variables for heard of items ####
 
   lst_column.heard_of <- list(
-    SUB.CHR.CS.ALC.Type_of_use = c(
+    SBS.CHR.CS.ALC.Type_of_use = c(
       'tlfb_alc',
       'tlfb_alc_l'
     ),
-    SUB.CHR.CS.NCT.Type_of_use = c(
+    SBS.CHR.CS.NCT.Type_of_use = c(
       'tlfb_tob',
       'tlfb_tob_l'
     ),
-    SUB.CHR.CS.CNN.Type_of_use = c(
+    SBS.CHR.CS.CNN.Type_of_use = c(
       'tlfb_mj',
       'tlfb_mj_l'
     ),
-    SUB.CHR.CS.OTH.Type_of_use = c(
+    SBS.CHR.CS.OTH.Type_of_use = c(
 
       'tlfb_mj_synth', # Synthetic MJ [K2 or spice]
       'tlfb_mj_synth_l',
@@ -2564,19 +2564,19 @@ abcddata_add.substance_use <- function(
   #### 2.3.3) Variables for experimentation ####
 
   lst_column.experimentation <- list(
-    SUB.CHR.CS.ALC.Type_of_use = c(
+    SBS.CHR.CS.ALC.Type_of_use = c(
       'tlfb_alc_sip',
       'tlfb_alc_sip_l'
     ),
-    SUB.CHR.CS.NCT.Type_of_use = c(
+    SBS.CHR.CS.NCT.Type_of_use = c(
       'tlfb_tob_puff',
       'tlfb_tob_puff_l'
     ),
-    SUB.CHR.CS.CNN.Type_of_use = c(
+    SBS.CHR.CS.CNN.Type_of_use = c(
       'tlfb_mj_puff',
       'tlfb_mj_puff_l'
     ),
-    SUB.CHR.CS.OTH.Type_of_use = c(
+    SBS.CHR.CS.OTH.Type_of_use = c(
 
       "tlfb_mj_synth_use", # Synthetic MJ [K2 or spice]
       "tlfb_mj_synth_use_l",
@@ -2641,13 +2641,13 @@ abcddata_add.substance_use <- function(
   #### 2.3.4) Variables for initiation ####
 
   lst_column.initiation <- list(
-    SUB.CHR.CS.ALC.Type_of_use = c(
+    SBS.CHR.CS.ALC.Type_of_use = c(
       'tlfb_alc_use',
       'tlfb_alc_use_l',
       'isip_2_2',
       'isip_2_l'
     ),
-    SUB.CHR.CS.NCT.Type_of_use = c(
+    SBS.CHR.CS.NCT.Type_of_use = c(
       'tlfb_cig_use',
       'tlfb_cig_use_l',
       'tlfb_ecig_use',
@@ -2661,7 +2661,7 @@ abcddata_add.substance_use <- function(
       'tlfb_pipes_use',
       'tlfb_pipes_use_l'
     ),
-    SUB.CHR.CS.CNN.Type_of_use = c(
+    SBS.CHR.CS.CNN.Type_of_use = c(
       'tlfb_mj_use',
       'tlfb_mj_use_l',
       'tlfb_blunt_use',
@@ -2675,7 +2675,7 @@ abcddata_add.substance_use <- function(
       'tlfb_tincture_use',
       'tlfb_tincture_use_l'
     ),
-    SUB.CHR.CS.OTH.Type_of_use = c(
+    SBS.CHR.CS.OTH.Type_of_use = c(
 
       "tlfb_mj_synth_use", # Synthetic MJ [K2 or spice]
       "tlfb_mj_synth_use_l",
@@ -2894,7 +2894,7 @@ abcddata_add.substance_use <- function(
 
   #### 2.3.7) Overall substance use ####
 
-  dtf_ABCD_long_form$SUB.CHR.CS.ANS.Type_of_use <- sapply(
+  dtf_ABCD_long_form$SBS.CHR.CS.ANS.Type_of_use <- sapply(
     1:nrow( dtf_ABCD_long_form ), function(r) {
 
       x <- unlist( dtf_ABCD_long_form[r, chr_columns] )
@@ -2913,7 +2913,7 @@ abcddata_add.substance_use <- function(
 
   lst_codebook_entries <- list(
 
-    SUB.CHR.CS.ALC.Type_of_use = list(
+    SBS.CHR.CS.ALC.Type_of_use = list(
       chr_description = paste0(
         "Whether participant had no use/experimentation/initiation of ",
         "any alcohol"
@@ -2932,7 +2932,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SUB.CHR.CS.ALC.Type_of_use',
+        'SBS.CHR.CS.ALC.Type_of_use',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -2948,7 +2948,7 @@ abcddata_add.substance_use <- function(
       )
     ),
 
-    SUB.CHR.CS.NCT.Type_of_use = list(
+    SBS.CHR.CS.NCT.Type_of_use = list(
       chr_description = paste0(
         "Whether participant had no use/experimentation/initiation of ",
         "any nicotine or tobacco products"
@@ -2967,7 +2967,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SUB.CHR.CS.NCT.Type_of_use',
+        'SBS.CHR.CS.NCT.Type_of_use',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -2991,7 +2991,7 @@ abcddata_add.substance_use <- function(
       )
     ),
 
-    SUB.CHR.CS.CNN.Type_of_use = list(
+    SBS.CHR.CS.CNN.Type_of_use = list(
       chr_description = paste0(
         "Whether participant had no use/experimentation/initiation of ",
         "any cannabis products"
@@ -3010,7 +3010,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SUB.CHR.CS.CNN.Type_of_use',
+        'SBS.CHR.CS.CNN.Type_of_use',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -3034,7 +3034,7 @@ abcddata_add.substance_use <- function(
       )
     ),
 
-    SUB.CHR.CS.OTH.Type_of_use = list(
+    SBS.CHR.CS.OTH.Type_of_use = list(
       chr_description = paste0(
         "Whether participant had no use/experimentation/initiation of ",
         "any cannabis products"
@@ -3051,7 +3051,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SUB.CHR.CS.OTH.Type_of_use',
+        'SBS.CHR.CS.OTH.Type_of_use',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -3142,7 +3142,7 @@ abcddata_add.substance_use <- function(
       )
     ),
 
-    SUB.CHR.CS.ANS.Type_of_use = list(
+    SBS.CHR.CS.ANS.Type_of_use = list(
       chr_description = paste0(
         "Whether participant had no use/experimentation/initiation of ",
         "any type of substance (alcohol or nicotine/tobacco or ",
@@ -3164,7 +3164,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SUB.CHR.CS.ANS.Type_of_use',
+        'SBS.CHR.CS.ANS.Type_of_use',
         'SSS.DBL.GD.Year'
       )
     )
