@@ -33,14 +33,17 @@ A data frame.
 }
 \description{
 Function to add individual items and summed scores
-for subscales of the BIS/BAS scale. The ABCD® study
-used a modified 20-item version of the scale developed by
-Pagliaccio et al. (2016). There were 4 subscales
+for subscales of the BIS/BAS scale.
+}
+\details{
+The ABCD® study used a modified 20-item version of the
+scale developed by Pagliaccio et al. (2016). There were 4 subscales
 (BIS with 7 items, BAS: Reward Responsiveness with 5 items,
 BAS: Drive with 4 items, and BAS: Fun Seeking with 4 items)
 with a response format of 0 (Not true) to 3 (Very true).
 The modified scale incorporated the BAS: Fun Seeking
 subscale from the original measure by Carver and White (1994).
+
 See Barch et al. (2018) for further details on the use of
 the BIS/BAs scale in the ABCD® study.
 }

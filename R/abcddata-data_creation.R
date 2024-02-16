@@ -3,7 +3,7 @@
 # email: kevin.w.potter@gmail.com
 # Please email me directly if you
 # have any questions or comments
-# Last updated 2024-02-13
+# Last updated 2024-02-16
 
 # Table of contents
 # 1) Creation of base data frames
@@ -67,6 +67,7 @@
 #' participants, families, and sites, as
 #' well as session details and group splits
 #' for reproducible matched samples (Feczko et al., 2021).
+#'
 #' See \url{https://abcdstudy.org/} for details on the
 #' ABCD® study, and refer to Saragosa-Harris et al. (2022)
 #' for helpful notes and instructions for researchers.
@@ -522,8 +523,9 @@ abcddata_initialize_long_form <- function(
 #' current gender identity, ethnicity, and
 #' race (per the 2015 NIH standards). The function
 #' also extracts variables regarding the
-#' combined income, employment status, and marital
-#' status for the child's parents/guardians.
+#' combined income, employment status, marital
+#' status, and highest education obtained for the
+#' child's parents/guardians.
 #'
 #' @param dtf_ABCD_long_form A data frame, output from
 #'   the [abcddata::abcddata_initialize_long_form]
@@ -1281,7 +1283,7 @@ abcddata_add.sample_characteristics <- function(
   )
 
   dtf_demo$recoded.employment_status_partner <- abcddata_replace(
-    dtf_demo$demo_comb_income_v2_l,
+    dtf_demo$demo_prtnr_empl_v2_l,
     c( 1, 2, 9, 10, 3, 11, 4, 5, 6, 7, 8, 999, 777 ),
     c(
       'Working now - Full/part time', # 1
@@ -1318,14 +1320,12 @@ abcddata_add.sample_characteristics <- function(
     dtf_demo$recoded.employment_status %in% c(
       'Working now - Full/part time',
       'Sick leave',
-      'Maternity leave',
-      'Student'
+      'Maternity leave'
     ) &
     dtf_demo$recoded.employment_status_partner %in% c(
       'Working now - Full/part time',
       'Sick leave',
-      'Maternity leave',
-      'Student'
+      'Maternity leave'
     )
   dtf_demo$recoded.employment_status_collapsed[lgc_cases] <-
     'Both parents in labor force'
@@ -1338,27 +1338,23 @@ abcddata_add.sample_characteristics <- function(
     ( dtf_demo$recoded.employment_status %in% c(
         'Working now - Full/part time',
         'Sick leave',
-        'Maternity leave',
-        'Student'
+        'Maternity leave'
       ) &
       !dtf_demo$recoded.employment_status_partner %in% c(
         'Working now - Full/part time',
         'Sick leave',
-        'Maternity leave',
-        'Student'
+        'Maternity leave'
       )
     ) | (
       !dtf_demo$recoded.employment_status %in% c(
         'Working now - Full/part time',
         'Sick leave',
-        'Maternity leave',
-        'Student'
+        'Maternity leave'
       ) &
       dtf_demo$recoded.employment_status_partner %in% c(
         'Working now - Full/part time',
         'Sick leave',
-        'Maternity leave',
-        'Student'
+        'Maternity leave'
       )
     )
   dtf_demo$recoded.employment_status_collapsed[lgc_cases] <-
@@ -1455,6 +1451,186 @@ abcddata_add.sample_characteristics <- function(
     lgc_baseline
   ]
 
+  # Partner
+
+  dtf_demo$recoded.education_partner_baseline <- abcddata_replace(
+    dtf_demo$demo_prtnr_ed_v2,
+    c( 0:21, 999, 777 ),
+    c(
+      'Never attended or Kindergarten only', # 0
+      '1st grade', # 1
+      '2nd grade', # 2
+      '3rd grade', # 3
+      '4th grade', # 4
+      '5th grade', # 5
+      '6th grade', # 6
+      '7th grade', # 7
+      '8th grade', # 8
+      '9th grade', # 9
+      '10th grade', # 10
+      '11th grade', # 11
+      '12th grade', # 12
+      'High school graduate', # 13
+      'General education degree or equivalent diploma', # 14
+      'Some college', # 15
+      'Associate degree - occupational', # 16
+      'Associate degree - academic program', # 17
+      'Bachelor degree (e.g., BA)', # 18
+      'Master degree (e.g., MA)', # 19
+      'Professional school degree (e.g., MD)', # 20
+      'Doctoral degree (e.g., PhD)', # 21
+      'Do not know', # 999
+      'Refuse to answer' # 777
+    )
+  )
+
+  dtf_demo$recoded.education_partner <- abcddata_replace(
+    dtf_demo$demo_prtnr_ed_v2_l,
+    c( 0:21, 999, 777 ),
+    c(
+      'Never attended or Kindergarten only', # 0
+      '1st grade', # 1
+      '2nd grade', # 2
+      '3rd grade', # 3
+      '4th grade', # 4
+      '5th grade', # 5
+      '6th grade', # 6
+      '7th grade', # 7
+      '8th grade', # 8
+      '9th grade', # 9
+      '10th grade', # 10
+      '11th grade', # 11
+      '12th grade', # 12
+      'High school graduate', # 13
+      'General education degree or equivalent diploma', # 14
+      'Some college', # 15
+      'Associate degree - occupational', # 16
+      'Associate degree - academic program', # 17
+      'Bachelor degree (e.g., BA)', # 18
+      'Master degree (e.g., MA)', # 19
+      'Professional school degree (e.g., MD)', # 20
+      'Doctoral degree (e.g., PhD)', # 21
+      'Do not know', # 999
+      'Refuse to answer' # 777
+    )
+  )
+
+  # Combine baseline and post-baseline
+  lgc_baseline <-
+    is.na( dtf_demo$recoded.education_partner ) &
+    !is.na( dtf_demo$recoded.education_partner_baseline )
+  dtf_demo$recoded.education_partner[
+    lgc_baseline
+  ] <- dtf_demo$recoded.education_partner_baseline[
+    lgc_baseline
+  ]
+
+  dtf_demo$recoded.education_num <- abcddata_replace(
+    dtf_demo$recoded.education,
+    c(
+      'Never attended or Kindergarten only', # 0
+      '1st grade', # 1
+      '2nd grade', # 2
+      '3rd grade', # 3
+      '4th grade', # 4
+      '5th grade', # 5
+      '6th grade', # 6
+      '7th grade', # 7
+      '8th grade', # 8
+      '9th grade', # 9
+      '10th grade', # 10
+      '11th grade', # 11
+      '12th grade', # 12
+      'High school graduate', # 13
+      'General education degree or equivalent diploma', # 14
+      'Some college', # 15
+      'Associate degree - occupational', # 16
+      'Associate degree - academic program', # 17
+      'Bachelor degree (e.g., BA)', # 18
+      'Master degree (e.g., MA)', # 19
+      'Professional school degree (e.g., MD)', # 20
+      'Doctoral degree (e.g., PhD)', # 21
+      'Do not know', # 999
+      'Refuse to answer' # 777
+    ),
+    c( 0:21, -1, -1 )
+  )
+
+  dtf_demo$recoded.education_partner_num <- abcddata_replace(
+    dtf_demo$recoded.education_partner,
+    c(
+      'Never attended or Kindergarten only', # 0
+      '1st grade', # 1
+      '2nd grade', # 2
+      '3rd grade', # 3
+      '4th grade', # 4
+      '5th grade', # 5
+      '6th grade', # 6
+      '7th grade', # 7
+      '8th grade', # 8
+      '9th grade', # 9
+      '10th grade', # 10
+      '11th grade', # 11
+      '12th grade', # 12
+      'High school graduate', # 13
+      'General education degree or equivalent diploma', # 14
+      'Some college', # 15
+      'Associate degree - occupational', # 16
+      'Associate degree - academic program', # 17
+      'Bachelor degree (e.g., BA)', # 18
+      'Master degree (e.g., MA)', # 19
+      'Professional school degree (e.g., MD)', # 20
+      'Doctoral degree (e.g., PhD)', # 21
+      'Do not know', # 999
+      'Refuse to answer' # 777
+    ),
+    c( 0:21, -1, -1 )
+  )
+
+  dtf_demo$recoded.education_combined <- apply(
+    dtf_dem[, c( 'recoded.education_num',
+                 'recoded.education_partner_num') ],
+    1,
+    function(x) {
+
+      int_out <- -1
+      if ( any( !is.na(x) ) ) {
+        int_out <- max(x, na.rm = T)
+      }
+
+    }
+  )
+
+  dtf_demo$recoded.education_combined <- abcddata_replace(
+    dtf_demo$recoded.education_combined,
+    c( 0:21, -1 ),
+    c(
+      'Never attended or Kindergarten only', # 0
+      '1st grade', # 1
+      '2nd grade', # 2
+      '3rd grade', # 3
+      '4th grade', # 4
+      '5th grade', # 5
+      '6th grade', # 6
+      '7th grade', # 7
+      '8th grade', # 8
+      '9th grade', # 9
+      '10th grade', # 10
+      '11th grade', # 11
+      '12th grade', # 12
+      'High school graduate', # 13
+      'General education degree or equivalent diploma', # 14
+      'Some college', # 15
+      'Associate degree - occupational', # 16
+      'Associate degree - academic program', # 17
+      'Bachelor degree (e.g., BA)', # 18
+      'Master degree (e.g., MA)', # 19
+      'Professional school degree (e.g., MD)', # 20
+      'Doctoral degree (e.g., PhD)', # 21
+      'Not provided'
+    )
+  )
+
   #### 2.1.3) Add variables ####
 
   dtf_ABCD_long_form <- abcddata_merge_data_sets(
@@ -1469,7 +1645,7 @@ abcddata_add.sample_characteristics <- function(
         'recoded.sex_at_birth',
       SMP.CHR.PC.Gender =
         'recoded.current_gender',
-      SMP.CHR.PC.Race_NIH_2015 =
+      SMP.CHR.PC.Race.NIH_2015 =
         'recoded.race_NIH_2015',
       # SMP.CHR.PC.Race_and_ethnicity =
       #   'recoded.race_ethnicity',
@@ -1485,14 +1661,18 @@ abcddata_add.sample_characteristics <- function(
         'recoded.marital_status',
       SMP.CHR.PS.Marital_status.Collapsed_3 =
         'recoded.marital_status_collapsed_3',
-      SMP.CHR.PS.Employment_status =
+      SMP.CHR.PS.Employment =
         'recoded.employment_status',
-      SMP.CHR.PS.Employment_status_partner =
+      SMP.CHR.PS.Employment.Partner =
         'recoded.employment_status_partner',
-      SMP.CHR.PS.Employment_status.Collapsed_4 =
+      SMP.CHR.PS.Employment.Combined.Collapsed_4 =
         'recoded.employment_status_collapsed',
-      SMP.CHR.PS.Highest_education_level =
-        'recoded.education'
+      SMP.CHR.PS.Education =
+        'recoded.education',
+      SMP.CHR.PS.Education.Partner =
+        'recoded.education_partner',
+      SMP.CHR.PS.Education.Combined =
+        'recoded.education_combined'
     ),
     lgc_progress = lgc_progress
   )
@@ -1504,7 +1684,7 @@ abcddata_add.sample_characteristics <- function(
     dtf_ABCD_long_form,
     'IDS.CHR.GD.Participant',
     c( 'SMP.CHR.PC.Sex.At_birth',
-       'SMP.CHR.PC.Race_NIH_2015',
+       'SMP.CHR.PC.Race.NIH_2015',
        'SMP.CHR.PC.Ethnicity' ),
     lgc_progress = lgc_progress
   )
@@ -1538,7 +1718,7 @@ abcddata_add.sample_characteristics <- function(
       )
     ),
 
-    SMP.CHR.PC.Race_NIH_2015 = list(
+    SMP.CHR.PC.Race.NIH_2015 = list(
       chr_description = paste0(
         "Race of child based on National Institute of Health 2015 standards"
       ),
@@ -1732,6 +1912,139 @@ abcddata_add.sample_characteristics <- function(
         "demo_prnt_marital_v2",
         "demo_prnt_marital_v2_l"
       )
+    ),
+
+    SMP.CHR.PS.Employment = list(
+      chr_description = paste0(
+        "The employment status for the parent"
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SMP.CHR.PS.Employment',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        "demo_prnt_empl_v2",
+        "demo_prnt_empl_v2_l"
+      )
+    ),
+
+    SMP.CHR.PS.Employment.Partner = list(
+      chr_description = paste0(
+        "The employment status for the partner of the parent"
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SMP.CHR.PS.Employment.Partner',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        "demo_prtnr_empl_v2",
+        "demo_prtnr_empl_v2_l"
+      )
+    ),
+
+    SMP.CHR.PS.Employment.Combined.Collapsed_4 = list(
+      chr_description = paste0(
+        "The employment status for the parent(s) of the child - ",
+        "collapsed to 4 categories"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          'Working now - Full/part time',
+          'Sick leave',
+          'Maternity leave',
+          'Temporarily laid off',
+          'Looking for work',
+          'Student',
+          'Unemployed - not looking for work',
+          'Retired',
+          'Disabled - permanently/temporarily',
+          'Stay at home parent',
+          'Other',
+          'Refuse to answer'
+        ),
+        additional_content = c(
+          'Both parents/One of parents/Lone parent in labor force',
+          '',
+          '',
+          'None in labor force',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          'NA'
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SMP.CHR.PS.Employment.Combined.Collapsed_4',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        "demo_prnt_empl_v2",
+        "demo_prnt_empl_v2_l",
+        "demo_prtnr_empl_v2",
+        "demo_prtnr_empl_v2_l"
+      )
+    ),
+
+    SMP.CHR.PS.Education = list(
+      chr_description = paste0(
+        "The highest level of education obtained for the parent"
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SMP.CHR.PS.Education',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        "demo_prnt_ed_v2",
+        "demo_prnt_ed_v2_l"
+      )
+    ),
+
+    SMP.CHR.PS.Education.Partner = list(
+      chr_description = paste0(
+        "The highest level of education obtained ",
+        "for the partner of the parent"
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SMP.CHR.PS.Education.Partner',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        "demo_prtnr_ed_v2",
+        "demo_prtnr_ed_v2_l"
+      )
+    ),
+
+    SMP.CHR.PS.Education.Combined = list(
+      chr_description = paste0(
+        "The highest level of education obtained for the ",
+        "parent(s) of the child"
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SMP.CHR.PS.Education.Combined',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        "demo_prnt_ed_v2",
+        "demo_prnt_ed_v2_l",
+        "demo_prtnr_empl_v2",
+        "demo_prtnr_empl_v2_l"
+      )
     )
 
   )
@@ -1763,7 +2076,9 @@ abcddata_add.sample_characteristics <- function(
 #'
 #' Function to add individual items and summed scores
 #' for subscales of the UPPS-P Impulsive Behavior
-#' Scale for Children. The ABCD® study used a modified
+#' Scale for Children.
+#'
+#' The ABCD® study used a modified
 #' 20 item version of the scale developed by
 #' Zapolski et al. (2010). There were 5 subscales
 #' (Negative urgency, perseverance, premeditation,
@@ -1771,7 +2086,9 @@ abcddata_add.sample_characteristics <- function(
 #' consisting of 4 items each on with a response format
 #' of 1 (Not at all like me) to 4 (Very much like me)
 #' coded so higher scores always indicate greater
-#' impulsivity. See Barch et al. (2018) for further
+#' impulsivity.
+#'
+#' See Barch et al. (2018) for further
 #' details on the use of the UPPS-P scale in the
 #' ABCD® study.
 #'
@@ -2054,7 +2371,8 @@ abcddata_add.UPPS <- function(
       "positive urgency"
     ),
     " subscale from the modified UPPS-P Impulsive Behavior ",
-    "Scale for Children. Higher scores indicate ",
+    "Scale for Children, with scores ranging from 4 - 16. ",
+    "Higher scores indicate ",
     c(
       "a greater tendency towards rashness during negative moods",
       "a greater inability to remain focused on a task",
@@ -2103,6 +2421,8 @@ abcddata_add.UPPS <- function(
     # Close 'Loop over codebook entries'
   }
 
+  #### 2.2.5) Output ####
+
   return( dtf_ABCD_long_form )
 }
 
@@ -2118,7 +2438,8 @@ abcddata_add.UPPS <- function(
 #' sipping, nicotine/cannabis puffing or trying)
 #' versus initiation (one or more standard drinks
 #' of alcohol, more than a puff or taste of
-#' nicotine/cannabis, any other type of substance use).
+#' nicotine/cannabis, and any kind of use of
+#' other types of substances).
 #'
 #' Substances were categorized into four types:
 #' alcohol, nicotine or tobacco, cannabis, and
@@ -2590,6 +2911,283 @@ abcddata_add.substance_use <- function(
 
   #### 2.3.8) Codebook entries ####
 
+  lst_codebook_entries <- list(
+
+    SUB.CHR.CS.ALC.Type_of_use = list(
+      chr_description = paste0(
+        "Whether participant had no use/experimentation/initiation of ",
+        "any alcohol"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          "No use",
+          "Experimentation",
+          "Initiation"
+        ),
+        additional_content = c(
+          "",
+          "Alcohol sipping",
+          "Had one or more standard alcohol drinks"
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SUB.CHR.CS.ALC.Type_of_use',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        'tlfb_alc',
+        'tlfb_alc_l',
+        'tlfb_alc_sip',
+        'tlfb_alc_sip_l',
+        'tlfb_alc_use',
+        'tlfb_alc_use_l',
+        'isip_2_2',
+        'isip_2_l'
+      )
+    ),
+
+    SUB.CHR.CS.NCT.Type_of_use = list(
+      chr_description = paste0(
+        "Whether participant had no use/experimentation/initiation of ",
+        "any nicotine or tobacco products"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          "No use",
+          "Experimentation",
+          "Initiation"
+        ),
+        additional_content = c(
+          "",
+          "Puff or taste of nicotine or tobacco",
+          "More than a puff or taste of nicotine or tobacco"
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SUB.CHR.CS.NCT.Type_of_use',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        'tlfb_tob',
+        'tlfb_tob_l',
+        'tlfb_tob_puff',
+        'tlfb_tob_puff_l',
+        'tlfb_cig_use',
+        'tlfb_cig_use_l',
+        'tlfb_ecig_use',
+        'tlfb_ecig_use_l',
+        'tlfb_chew_use',
+        'tlfb_chew_use_l',
+        'tlfb_cigar_use',
+        'tlfb_cigar_use_l',
+        'tlfb_hookah_use',
+        'tlfb_hookah_use_l',
+        'tlfb_pipes_use',
+        'tlfb_pipes_use_l'
+      )
+    ),
+
+    SUB.CHR.CS.CNN.Type_of_use = list(
+      chr_description = paste0(
+        "Whether participant had no use/experimentation/initiation of ",
+        "any cannabis products"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          "No use",
+          "Experimentation",
+          "Initiation"
+        ),
+        additional_content = c(
+          "",
+          "Puff or taste of cannabis",
+          "More than a puff or taste of cannabis"
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SUB.CHR.CS.CNN.Type_of_use',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        'tlfb_mj',
+        'tlfb_mj_l',
+        'tlfb_mj_puff',
+        'tlfb_mj_puff_l',
+        'tlfb_mj_use',
+        'tlfb_mj_use_l',
+        'tlfb_blunt_use',
+        'tlfb_blunt_use_l',
+        'tlfb_edible_use',
+        'tlfb_edible_use_l',
+        'tlfb_mj_conc_use',
+        'tlfb_mj_conc_use_l',
+        'tlfb_mj_drink_use',
+        'tlfb_mj_drink_use_l',
+        'tlfb_tincture_use',
+        'tlfb_tincture_use_l'
+      )
+    ),
+
+    SUB.CHR.CS.OTH.Type_of_use = list(
+      chr_description = paste0(
+        "Whether participant had no use/experimentation/initiation of ",
+        "any cannabis products"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          "No use",
+          "Initiation"
+        ),
+        additional_content = c(
+          "",
+          "Any use of other substances"
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SUB.CHR.CS.OTH.Type_of_use',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        'tlfb_mj_synth', # Synthetic MJ [K2 or spice]
+        'tlfb_mj_synth_l',
+
+        'tlfb_bitta', # Bittamugen or byphoditin
+        'tlfb_bitta_l',
+
+        'tlfb_inhalant', # Sniffing products to get high
+        'tlfb_inhalant_l',
+
+        'tlfb_rx_misuse', # Prescription med abuse
+        'tlfb_rx_misuse_l',
+
+        'tlfb_list_yes_no',
+        'tlfb_list_yes_no_l',
+
+        'tlfb_list___1', # Cocaine
+        'tlfb_list___2', # Bath salts
+        'tlfb_list___3', # Meth
+        'tlfb_list___4', # Ecstasy
+        'tlfb_list___5', # Ketamine
+        'tlfb_list___6', # GBH
+        'tlfb_list___7', # Heroin
+        'tlfb_list___8', # Hallucinogens
+        'tlfb_list___9', # Mushrooms
+        'tlfb_list___10', # Salvia
+        'tlfb_list___11',  # Steroids
+
+        "tlfb_mj_synth_use", # Synthetic MJ [K2 or spice]
+        "tlfb_mj_synth_use_l",
+
+        "tlfb_bitta_use", # Bittamugen or byphoditin
+        "tlfb_bitta_use_l",
+
+        "tlfb_inhalant_use", # Sniffing products to get high
+        "tlfb_inhalant_use_l",
+
+        "tlfb_sniff_use",
+        # "tlfb_sniff_use_l",
+
+        "tlfb_cough_use", # Prescription med abuse
+        "tlfb_cough_use_l",
+
+        "tlfb_tranq_use",
+        "tlfb_tranq_use_l",
+
+        "tlfb_vicodin_use",
+        "tlfb_vicodin_use_l",
+
+        "tlfb_opi_use",
+        "tlfb_opi_use_l",
+
+        "tlfb_coc_use", # Cocaine
+        "tlfb_coc_use_l",
+
+        "tlfb_bsalts_use", # Bath salts
+        "tlfb_bsalts_use_l",
+
+        "tlfb_meth_use", # Meth
+        "tlfb_meth_use_l",
+
+        "tlfb_amp_use", # Ecstasy
+        "tlfb_amp_use_l",
+
+        "tlfb_mdma_use",
+        "tlfb_mdma_use_l",
+
+        "tlfb_ket_use", # Ketamine
+        "tlfb_ket_use_l",
+
+        "tlfb_ghb_use", # GBH
+        "tlfb_ghb_use_l",
+
+        "tlfb_hall_use", # Hallucinogens
+        # "tlfb_hall_use_l",
+
+        "tlfb_shrooms_use", # Mushrooms
+        "tlfb_shrooms_use_l",
+
+        "tlfb_salvia_use", # Salvia
+        "tlfb_salvia_use_l",
+
+        "tlfb_steroids_use", # Steroids
+        "tlfb_steroids_use_l"
+      )
+    ),
+
+    SUB.CHR.CS.ANS.Type_of_use = list(
+      chr_description = paste0(
+        "Whether participant had no use/experimentation/initiation of ",
+        "any type of substance (alcohol or nicotine/tobacco or ",
+        "cannabis or other)"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          "No use",
+          "Experimentation",
+          "Initiation"
+        ),
+        additional_content = c(
+          "",
+          "Alcohol sipping or nicotine/tobacco/cannabis puff or taste",
+          "One or more alcohol standard drinks or more than a ",
+          "puff/taste of nicotine/tobacco/cannabis or any kind of ",
+          "use of other substances"
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SUB.CHR.CS.ANS.Type_of_use',
+        'SSS.DBL.GD.Year'
+      )
+    )
+
+  )
+
+  # Loop over codebook entries
+  for ( l in seq_along(lst_codebook_entries) ) {
+
+    lst_arg <- lst_codebook_entries[[l]]
+    lst_arg$dtf_base <- dtf_ABCD_long_form
+    lst_arg$chr_column <- names( lst_codebook_entries )[l]
+
+    dtf_ABCD_long_form <- do.call(
+      abcddata_codebook_add_entry,
+      lst_arg
+    )
+
+    # Close 'Loop over codebook entries'
+  }
+
+  #### 2.3.9) Output ####
+
   return( dtf_ABCD_long_form )
 }
 
@@ -2597,14 +3195,16 @@ abcddata_add.substance_use <- function(
 #' Add Data for the BIS/BAS Scale
 #'
 #' Function to add individual items and summed scores
-#' for subscales of the BIS/BAS scale. The ABCD® study
-#' used a modified 20-item version of the scale developed by
-#' Pagliaccio et al. (2016). There were 4 subscales
+#' for subscales of the BIS/BAS scale.
+#'
+#' The ABCD® study used a modified 20-item version of the
+#' scale developed by Pagliaccio et al. (2016). There were 4 subscales
 #' (BIS with 7 items, BAS: Reward Responsiveness with 5 items,
 #' BAS: Drive with 4 items, and BAS: Fun Seeking with 4 items)
 #' with a response format of 0 (Not true) to 3 (Very true).
 #' The modified scale incorporated the BAS: Fun Seeking
 #' subscale from the original measure by Carver and White (1994).
+#'
 #' See Barch et al. (2018) for further details on the use of
 #' the BIS/BAs scale in the ABCD® study.
 #'
@@ -2874,7 +3474,9 @@ abcddata_add.BIS_BAS <- function(
       "BAS: Fun Seeking"
     ),
     " subscale from the modified BIS/BAS ",
-    "scale. Higher scores indicate ",
+    "scale, with scores ranging from 0 to ",
+    c( 7, 5, 4, 4 )*3,
+    ". Higher scores indicate ",
     c(
       "a greater degree of worry and fearfulness",
       "a greater excitement over reinforcing outcomes",
@@ -2920,6 +3522,8 @@ abcddata_add.BIS_BAS <- function(
     # Close 'Loop over codebook entries'
   }
 
+  #### 2.4.5) Output ####
+
   return( dtf_ABCD_long_form )
 }
 
@@ -2928,7 +3532,9 @@ abcddata_add.BIS_BAS <- function(
 #'
 #' Function to add individual items and summed scores
 #' for subscales of the Child Behavior Checklist (CBCL;
-#' Achenbach, 2009) for ages 6-18. The ABCD® study administered
+#' Achenbach, 2009) for ages 6-18.
+#'
+#' The ABCD® study administered
 #' 112 items (note item 56 is broken into 8 sub-questions)
 #' with a response format of 0 (Not true) to 2 (Very
 #' true/often true). The study excluded the final
@@ -2938,17 +3544,21 @@ abcddata_add.BIS_BAS <- function(
 #' 11 items, Social Problems with 11 items, Thought Problems
 #' with 15 items, Attention Problems with 10 items,
 #' Rule-Breaking Behavior with 17 items, and
-#' Aggressive Behavior with 18 items). Five of the
-#' subscales group into two higher order factors: Internalizing
-#' (Anxious/Depressed, Withdrawn/Depressed, and Somatic
+#' Aggressive Behavior with 18 items).
+#'
+#' Five of the subscales group into two higher order factors:
+#' Internalizing (Anxious/Depressed, Withdrawn/Depressed, and Somatic
 #' Complaints) and Externalizing (Rule-Breaking Behavior,
 #' Aggressive Behavior). A total score can also be computed
 #' using all 112 items including the 16 items not included
-#' in any subscale. The questions can also be
-#' split into 6 subscales oriented for the Diagnostic and
-#' Statistical Manual of Mental Disorders (Affective Problems,
-#' Anxiety Problems, Somatic Problems, Attention-Deficit-Hyperactive
-#' Disorder, Oppositional Defiant Problems, Conduct Problems).
+#' in any subscale.
+#'
+#' The questions can also be split into 6 subscales oriented for
+#' the Diagnostic and Statistical Manual of Mental Disorders
+#' (Affective Problems, Anxiety Problems, Somatic Problems,
+#' Attention-Deficit-Hyperactive Disorder, Oppositional Defiant
+#' Problems, Conduct Problems).
+#'
 #' See Barch et al. (2018) for further details on the use of
 #' the CBCL scale in the  ABCD® study.
 #'
@@ -3669,13 +4279,27 @@ abcddata_add.CBCL <- function(
       'cbcl_scr_dsm5_conduct_r'
   )
 
+  int_n_items <- c(
+    13, 8, 11, 11, 15, 10, 17, 18,
+    13 + 8 + 11,
+    17 + 18
+  )
+
   # Description for each subscale
   chr_subscale_description <- paste0(
     "Summed scores for the ",
     c(
+      int_n_items,
+      rep( '', 6 )
+    ),
+    c(
+      rep( '-item ', length( int_n_items ) ),
+      rep( '', 6 )
+    ),
+    c(
       # Syndrome scales
       "Anxious/Depressed",
-      "Depressed",
+      "Withdrawn/Depressed",
       "Somatic Complaints",
       "Social Problems",
       "Thought Problems",
@@ -3693,8 +4317,16 @@ abcddata_add.CBCL <- function(
       'DSM-5 Oppositional Defiant Problems',
       'DSM-5 Conduct Problems'
     ),
-    " subscale from the CBCL ",
-    "scale. Higher scores indicate ",
+    " subscale from the CBCL scale",
+    c(
+      rep( ", with scores ranging from 0 - ", length( int_n_items ) ),
+      rep( '', 6 )
+    ),
+    c(
+      int_n_items * 2,
+      rep( '', 6 )
+    ),
+    ". Higher scores indicate ",
     "a greater degree of problematic behavior"
   )
 
@@ -3732,6 +4364,8 @@ abcddata_add.CBCL <- function(
 
     # Close 'Loop over codebook entries'
   }
+
+  #### 2.5.5) Output ####
 
   return( dtf_ABCD_long_form )
 }

@@ -33,6 +33,8 @@ for the ABCD® study with identifiers for
 participants, families, and sites, as
 well as session details and group splits
 for reproducible matched samples (Feczko et al., 2021).
+}
+\details{
 See \url{https://abcdstudy.org/} for details on the
 ABCD® study, and refer to Saragosa-Harris et al. (2022)
 for helpful notes and instructions for researchers.
@@ -50,4 +52,7 @@ A practical guide for researchers and reviewers using the ABCD
 Study and other large longitudinal datasets.
 Developmental Cognitive Neuroscience, 55, 1-11.
 https://doi.org/10.1016/j.dcn.2022.101115
+}
+\author{
+Kevin Potter
 }

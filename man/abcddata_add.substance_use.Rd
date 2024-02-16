@@ -32,13 +32,18 @@ A data frame.
 }
 \description{
 Function to add data on whether children engaged
-in any substance use. Two type of substance use
+in any substance use.
+}
+\details{
+Two type of substance use
 are defined as per Sullivan et al. (2022):
 experimentation (low-level use, such as alcohol
 sipping, nicotine/cannabis puffing or trying)
 versus initiation (one or more standard drinks
 of alcohol, more than a puff or taste of
-nicotine/cannabis, any other type of substance use).
+nicotine/cannabis, and any kind of use of
+other types of substances).
+
 Substances were categorized into four types:
 alcohol, nicotine or tobacco, cannabis, and
 other substances (which consisted of: synthetic MJ,

@@ -34,7 +34,10 @@ A data frame.
 \description{
 Function to add individual items and summed scores
 for subscales of the Child Behavior Checklist (CBCL;
-Achenbach, 2009) for ages 6-18. The ABCD® study administered
+Achenbach, 2009) for ages 6-18.
+}
+\details{
+The ABCD® study administered
 112 items (note item 56 is broken into 8 sub-questions)
 with a response format of 0 (Not true) to 2 (Very
 true/often true). The study excluded the final
@@ -44,17 +47,21 @@ Withdrawn/Depressed with 8 items, Somatic Complaints with
 11 items, Social Problems with 11 items, Thought Problems
 with 15 items, Attention Problems with 10 items,
 Rule-Breaking Behavior with 17 items, and
-Aggressive Behavior with 18 items). Five of the
-subscales group into two higher order factors: Internalizing
-(Anxious/Depressed, Withdrawn/Depressed, and Somatic
+Aggressive Behavior with 18 items).
+
+Five of the subscales group into two higher order factors:
+Internalizing (Anxious/Depressed, Withdrawn/Depressed, and Somatic
 Complaints) and Externalizing (Rule-Breaking Behavior,
 Aggressive Behavior). A total score can also be computed
 using all 112 items including the 16 items not included
-in any subscale. The questions can also be
-split into 6 subscales oriented for the Diagnostic and
-Statistical Manual of Mental Disorders (Affective Problems,
-Anxiety Problems, Somatic Problems, Attention-Deficit-Hyperactive
-Disorder, Oppositional Defiant Problems, Conduct Problems).
+in any subscale.
+
+The questions can also be split into 6 subscales oriented for
+the Diagnostic and Statistical Manual of Mental Disorders
+(Affective Problems, Anxiety Problems, Somatic Problems,
+Attention-Deficit-Hyperactive Disorder, Oppositional Defiant
+Problems, Conduct Problems).
+
 See Barch et al. (2018) for further details on the use of
 the CBCL scale in the  ABCD® study.
 }

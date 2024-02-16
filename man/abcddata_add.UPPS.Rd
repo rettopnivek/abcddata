@@ -34,7 +34,10 @@ A data frame.
 \description{
 Function to add individual items and summed scores
 for subscales of the UPPS-P Impulsive Behavior
-Scale for Children. The ABCD® study used a modified
+Scale for Children.
+}
+\details{
+The ABCD® study used a modified
 20 item version of the scale developed by
 Zapolski et al. (2010). There were 5 subscales
 (Negative urgency, perseverance, premeditation,
@@ -42,7 +45,9 @@ sensation seeking, and positive urgency)
 consisting of 4 items each on with a response format
 of 1 (Not at all like me) to 4 (Very much like me)
 coded so higher scores always indicate greater
-impulsivity. See Barch et al. (2018) for further
+impulsivity.
+
+See Barch et al. (2018) for further
 details on the use of the UPPS-P scale in the
 ABCD® study.
 }

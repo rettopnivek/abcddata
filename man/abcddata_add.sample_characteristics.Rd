@@ -37,6 +37,7 @@ variables regarding a child's sex at birth,
 current gender identity, ethnicity, and
 race (per the 2015 NIH standards). The function
 also extracts variables regarding the
-combined income, employment status, and marital
-status for the child's parents/guardians.
+combined income, employment status, marital
+status, and highest education obtained for the
+child's parents/guardians.
 }
