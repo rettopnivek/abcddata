@@ -3,7 +3,7 @@
 # email: kevin.w.potter@gmail.com
 # Please email me directly if you
 # have any questions or comments
-# Last updated 2024-02-16
+# Last updated 2024-02-18
 
 # Table of contents
 # 1) Creation of base data frames
@@ -4368,6 +4368,250 @@ abcddata_add.CBCL <- function(
   }
 
   #### 2.5.5) Output ####
+
+  return( dtf_ABCD_long_form )
+}
+
+#### 2.6) abcddata_add.family_history ####
+#' Add Data for Family History
+#'
+#' Function to add data on assorted family history
+#' measures (e.g., substance use problems, mental health
+#' issues, etc.) for the ABCD® study.
+#'
+#' @param dtf_ABCD_long_form A data frame, output from
+#'   the [abcddata::abcddata_initialize_long_form]
+#'   function.
+#' @param chr_files A character vector with
+#'   the file name for the data on family history.
+#' @param chr_paths A character vector with
+#'   the associated folder path for the
+#'   family history file.
+#' @param lgc_progress A logical value; if
+#'   \code{TRUE} displays the progress of the
+#'   data processing.
+#'
+#' @returns A data frame.
+#'
+#' @export
+
+abcddata_add.family_history <- function(
+    dtf_ABCD_long_form,
+    chr_files = 'mh_p_fhx.csv',
+    chr_paths = 'core/mental-health',
+    lgc_progress = TRUE ) {
+
+  #### 2.6.1) Load in data ####
+
+  # Read in file
+  chr_full_path <- chr_files[1]
+  if ( chr_paths[1] != '' ) {
+    chr_full_path <- paste0( chr_paths[1], '/', chr_files[1] )
+  }
+  dtf_fhx <- read.csv(
+    file = chr_full_path,
+    header = TRUE
+  )
+
+  #### 2.6.2) Recode variables ####
+
+  dtf_fhx$recoded.any_substance_problem <- as.numeric(
+    dtf_fhx$famhx_ss_momdad_alc_p %in% 1 |
+    dtf_fhx$famhx_ss_momdad_dg_p %in% 1
+  )
+  dtf_fhx$recoded.any_substance_problem[
+    is.na( dtf_fhx$famhx_ss_momdad_alc_p ) &
+    is.na( dtf_fhx$famhx_ss_momdad_dg_p )
+  ] <- NA
+
+  #### 2.6.3) Add variables ####
+
+  chr_variables <- c(
+    SMP.CHR.PS.Parents_with.Alcohol_problem =
+      'famhx_ss_momdad_alc_p',
+    SMP.CHR.PS.Parents_with.Drug_use_problem =
+      'famhx_ss_momdad_dg_p',
+    SMP.CHR.PS.Parents_with.Any_substance_problem =
+      'recoded.any_substance_problem',
+    SMP.CHR.PS.Parents_with.Depression_problem =
+      'famhx_ss_momdad_dprs_p',
+    SMP.CHR.PS.Parents_with.Mania_problem =
+      'famhx_ss_momdad_ma_p',
+    SMP.CHR.PS.Parents_with.Paranoia_problem =
+      'famhx_ss_momdad_vs_p',
+    SMP.CHR.PS.Parents_with.Job_or_police_problem =
+      'famhx_ss_momdad_trb_p',
+    SMP.CHR.PS.Parents_with.Nervous_breakdown =
+      'famhx_ss_momdad_nrv_p',
+    SMP.CHR.PS.Parents_with.Mental_health_counseling =
+      'famhx_ss_momdad_prf_p',
+    SMP.CHR.PS.Parents_with.Hospitalized_for_mental_health =
+      'famhx_ss_momdad_hspd_p',
+    SMP.CHR.PS.Parents_with.Suicide_attempt =
+      'famhx_ss_momdad_scd_p'
+  )
+
+  dtf_ABCD_long_form <- abcddata_merge_data_sets(
+    dtf_ABCD_long_form,
+    dtf_fhx,
+    list(
+      c( 'IDS.CHR.GD.Participant', 'src_subject_id' ),
+      c( 'SSS.CHR.GD.Time_point', 'eventname' )
+    ),
+    chr_variables,
+    lgc_progress = lgc_progress
+  )
+
+  #### 2.6.4) Additional processing ####
+
+  # Loop over new columns
+  for ( chr_column in names(chr_variables) ) {
+
+    dtf_ABCD_long_form[[ chr_column ]] <- abcddata_replace(
+      dtf_ABCD_long_form[[ chr_column ]],
+      c( 0, 1 ),
+      c( 'No', 'Yes' )
+    )
+
+    # Close 'Loop over new columns'
+  }
+
+  #### 2.6.4) Codebook entries ####
+
+  lst_collected_over <- abcddata_codebook_collected_over(
+    dtf_ABCD_long_form,
+    'SMP.CHR.PS.Parents_with.Any_substance_problem',
+    'SSS.DBL.GD.Year'
+  )
+
+  lst_codebook_entries <- list(
+
+    SMP.CHR.PS.Parents_with.Alcohol_problem = list(
+      chr_description = paste0(
+        "Indicator for whether any parent had problems with alcohol use"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = chr_variables[1]
+    ),
+
+    SMP.CHR.PS.Parents_with.Drug_use_problem = list(
+      chr_description = paste0(
+        "Indicator for whether any parent had problems with any ",
+        " substance use other than alcohol"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[2],
+      chr_source_variables = ""
+    ),
+
+    SMP.CHR.PS.Parents_with.Any_substance_problem = list(
+      chr_description = paste0(
+        "Indicator for whether any parent had problems with any ",
+        "type of substance use - alcohol and/or other substances"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = chr_variables[1:2]
+    ),
+
+    SMP.CHR.PS.Parents_with.Depression_problem = list(
+      chr_description = paste0(
+        "Indicator for whether any parent had problems with depression"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = chr_variables[4]
+    ),
+
+    SMP.CHR.PS.Parents_with.Mania_problem = list(
+      chr_description = paste0(
+        "Indicator for whether any parent had problems with mania"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = chr_variables[5]
+    ),
+
+    SMP.CHR.PS.Parents_with.Paranoia_problem = list(
+      chr_description = paste0(
+        "Indicator for whether any parent had problems with ",
+        "visions of others spying on them or plotting against ",
+        "them"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = chr_variables[6]
+    ),
+
+    SMP.CHR.PS.Parents_with.Job_or_police_problem = list(
+      chr_description = paste0(
+        "Indicator for whether any parent had problems ",
+        "holding down a job or with fights with the police"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = chr_variables[7]
+    ),
+
+    SMP.CHR.PS.Parents_with.Nervous_breakdown = list(
+      chr_description = paste0(
+        "Indicator for whether any parent had problems with ",
+        "nerves or nervous breakdowns"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = chr_variables[8]
+    ),
+
+    SMP.CHR.PS.Parents_with.Mental_health_counseling = list(
+      chr_description = paste0(
+        "Indicator for whether any parent had been to a doctor ",
+        "or counselor due to emotional or mental health issues"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = chr_variables[9]
+    ),
+
+    SMP.CHR.PS.Parents_with.Hospitalized_for_mental_health = list(
+      chr_description = paste0(
+        "Indicator for whether any parent had been hospitalized due to ",
+        "due to emotional or mental health issues"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = chr_variables[10]
+    ),
+
+    SMP.CHR.PS.Parents_with.Suicide_attempt = list(
+      chr_description = paste0(
+        "Indicator for whether any parent had suffered a ",
+        "suicide attempt or death"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = chr_variables[11]
+    )
+
+  )
+
+  # Loop over codebook entries
+  for ( l in seq_along(lst_codebook_entries) ) {
+
+    lst_arg <- lst_codebook_entries[[l]]
+    lst_arg$dtf_base <- dtf_ABCD_long_form
+    lst_arg$chr_column <- names( lst_codebook_entries )[l]
+
+    dtf_ABCD_long_form <- do.call(
+      abcddata_codebook_add_entry,
+      lst_arg
+    )
+
+    # Close 'Loop over codebook entries'
+  }
+
+  #### 2.6.5) Output ####
 
   return( dtf_ABCD_long_form )
 }
