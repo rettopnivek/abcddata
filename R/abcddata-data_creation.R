@@ -4811,6 +4811,11 @@ abcddata_add.substance_use_perceived_harm <- function(
     'SSS.DBL.GD.Year'
   )
 
+  lst_codebook_entries <- lapply(
+    1:16, function(x) return(NULL)
+  )
+  names(lst_codebook_entries) <- names(chr_items)
+
   # Loop over individual items
   for ( i in 1:16 ) {
 
