@@ -4616,3 +4616,236 @@ abcddata_add.family_history <- function(
   return( dtf_ABCD_long_form )
 }
 
+#### 2.7) abcddata_add.substance_use_perceived_harm ####
+#' Add Data for Perceived Harm of Substance Use
+#'
+#' Function to add data from 16 items on the perceived
+#' harm of substance use, adapted from the Monitoring the
+#' Future Study (e.g., Johnston et al., 2017) for the ABCD®
+#' study.
+#'
+#' @param dtf_ABCD_long_form A data frame, output from
+#'   the [abcddata::abcddata_initialize_long_form]
+#'   function.
+#' @param chr_files A character vector with
+#'   the file name for the data on family history.
+#' @param chr_paths A character vector with
+#'   the associated folder path for the
+#'   family history file.
+#' @param lgc_progress A logical value; if
+#'   \code{TRUE} displays the progress of the
+#'   data processing.
+#'
+#' @returns A data frame.
+#'
+#' @references
+#' Johnston, L. D., O'Malley, P. M., Miech, R. A., Bachman,
+#'   J. G., Schulenberg, J. E. (2017). Monitoring the Future
+#'   national survey results on drug use, 1975–2016: Overview,
+#'   key findings on adolescent drug Use. Institute for Social
+#'   Research, The University of Michigan.
+#'
+#' @export
+
+abcddata_add.substance_use_perceived_harm <- function(
+    dtf_ABCD_long_form,
+    chr_files = 'su_y_percharm.csv',
+    chr_paths = 'core/substance-use',
+    lgc_progress = TRUE ) {
+
+  #### 2.7.1) Load in data ####
+
+  # Read in file
+  chr_full_path <- chr_files[1]
+  if ( chr_paths[1] != '' ) {
+    chr_full_path <- paste0( chr_paths[1], '/', chr_files[1] )
+  }
+  dtf_prchrm <- read.csv(
+    file = chr_full_path,
+    header = TRUE
+  )
+
+  #### 2.7.2) Add individual items ####
+
+  lst_response_format <- list(
+    content = 0:3,
+    additional_content = c(
+      'No risk',
+      'Slight risk',
+      'Moderate risk',
+      'Great risk'
+    )
+  )
+
+  chr_items <- paste0( 'phs_', 1:16, '_y' )
+  names( chr_items ) <- paste0(
+    'INV.INT.CS.PHS.Item_', 1:16
+  )
+
+  dtf_ABCD_long_form <- abcddata_merge_data_sets(
+    dtf_ABCD_long_form,
+    dtf_prchrm,
+    list(
+      c( 'IDS.CHR.GD.Participant', 'src_subject_id' ),
+      c( 'SSS.CHR.GD.Time_point', 'eventname' )
+    ),
+    chr_items,
+    lgc_progress = lgc_progress
+  )
+
+  # Loop over items
+  for ( k in 1:seq_along( chr_items ) ) {
+
+    lgc_missing <-
+      dtf_ABCD_long_form[[ names(chr_items)[k] ]] %in% 999
+    dtf_ABCD_long_form[[ names(chr_items)[k] ]][lgc_missing] <- NA
+
+    # Close 'Loop over items'
+  }
+
+  #### 2.7.3) Summed scores ####
+
+  # dtf_ABCD_long_form$INV.INT.CS.PHS.Total.Summed_score <-
+  #   rowSums(
+  #     dtf_ABCD_long_form[, names(chr_items)]
+  #   )
+
+  #### 2.7.4) Codebook entries ####
+
+  chr_harm <- paste0(
+    'How much do you think people risk harming themselves ',
+    '- physically or in other ways - '
+  )
+
+  chr_item_content <- c(
+    # Alcohol
+    Item_1 = paste0(
+      chr_harm,
+      'if they try one or two drinks of an alcoholic beverage - ',
+      'beer or wine or liquor?'
+    ),
+    Item_2 = paste0(
+      chr_harm,
+      'if they take one or two drinks nearly every day?'
+    ),
+    Item_3 = paste0(
+      chr_harm,
+      'if they have five or more drinks of an alcoholic beverage',
+      'once or twice each weekend?'
+    ),
+    # Nicotine or tobacco
+    Item_4 = paste0(
+      chr_harm,
+      'if they try one or two cigarettes?'
+    ),
+    Item_5 = paste0(
+      chr_harm,
+      'if they smoke cigarettes occasionally?'
+    ),
+    Item_6 = paste0(
+      chr_harm,
+      'if they smoke one or more packs of cigarettes per day?'
+    ),
+    Item_7 = paste0(
+      chr_harm,
+      'if they use cigarettes regularly?'
+    ),
+    Item_8 = paste0(
+      chr_harm,
+      'if they use smokeless tobacco regularly?'
+    ),
+    # Cannabis
+    Item_9 = paste0(
+      chr_harm,
+      'if they try marijuana once or twice?'
+    ),
+    Item_10 = paste0(
+      chr_harm,
+      'if they use marijuana occasionally?'
+    ),
+    Item_11 = paste0(
+      chr_harm,
+      'if they use marijuana regularly?'
+    ),
+    # Other substances
+    Item_12 = paste0(
+      chr_harm,
+      'if they try liquid or sprays or gases that people sniff or ',
+      'inhale to get high - such as gasoline or glue or nitrous oxide - ',
+      'once or twice?'
+    ),
+    Item_13 = paste0(
+      chr_harm,
+      'if they try prescription pain relievers - such as Vicodin ',
+      'or hydrocodone or oxycontin but not over the counter drugs ',
+      'like Tylenol - in a way that a doctor did not ',
+      'direct them to use it once or twice?'
+    ),
+    Item_14 = paste0(
+      chr_harm,
+      'if they try prescription use of tranquilizers to relax people ',
+      '- such as Xanax or Ativan - in a way a doctor did not direct ',
+      'them to use it once or twice?'
+    ),
+    Item_15 = paste0(
+      chr_harm,
+      'if they try prescription stimulants - such as Adderall or ',
+      'Ritalin - in a way a doctor did not direct them to use it ',
+      'once or twice?'
+    ),
+    Item_16 = paste0(
+      chr_harm,
+      'if they try other drugs like coacaine or heroin or ',
+      'methamphetamine?'
+    )
+  )
+
+  # Starting text for each item entry
+  chr_item_description <- paste0(
+    "Individual item for the perceived harm of substance use measure: "
+  )
+
+  lst_collected_over <- abcddata_codebook_collected_over(
+    dtf_ABCD_long_form,
+    'INV.INT.CS.PHS.Item_1',
+    'SSS.DBL.GD.Year'
+  )
+
+  # Loop over individual items
+  for ( i in 1:16 ) {
+
+    lst_codebook_entries[[i]] <- list(
+      chr_description =
+        paste0( chr_item_description, chr_item_content[i] ),
+      lst_values_and_labels = lst_response_format,
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables =
+        chr_items[i]
+    )
+
+    # Close 'Loop over individual items'
+  }
+
+  # Loop over codebook entries
+  for ( l in seq_along(lst_codebook_entries) ) {
+
+    lst_arg <- lst_codebook_entries[[l]]
+    lst_arg$dtf_base <- dtf_ABCD_long_form
+    lst_arg$chr_column <- names( lst_codebook_entries )[l]
+
+    dtf_ABCD_long_form <- do.call(
+      abcddata_codebook_add_entry,
+      lst_arg
+    )
+
+    # Close 'Loop over codebook entries'
+  }
+
+  #### 2.7.5) Output ####
+
+  return( dtf_ABCD_long_form )
+}
+
+
+
