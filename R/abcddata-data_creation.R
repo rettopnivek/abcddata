@@ -4679,7 +4679,7 @@ abcddata_add.substance_use_perceived_harm <- function(
 
   chr_items <- paste0( 'phs_', 1:16, '_y' )
   names( chr_items ) <- paste0(
-    'INV.INT.CS.PHS.Item_', 1:16
+    'QST.INT.CS.PHS.Item_', 1:16
   )
 
   dtf_ABCD_long_form <- abcddata_merge_data_sets(
@@ -4705,7 +4705,7 @@ abcddata_add.substance_use_perceived_harm <- function(
 
   #### 2.7.3) Summed scores ####
 
-  # dtf_ABCD_long_form$INV.INT.CS.PHS.Total.Summed_score <-
+  # dtf_ABCD_long_form$QST.INT.CS.PHS.Total.Summed_score <-
   #   rowSums(
   #     dtf_ABCD_long_form[, names(chr_items)]
   #   )
@@ -4807,7 +4807,7 @@ abcddata_add.substance_use_perceived_harm <- function(
 
   lst_collected_over <- abcddata_codebook_collected_over(
     dtf_ABCD_long_form,
-    'INV.INT.CS.PHS.Item_1',
+    'QST.INT.CS.PHS.Item_1',
     'SSS.DBL.GD.Year'
   )
 
