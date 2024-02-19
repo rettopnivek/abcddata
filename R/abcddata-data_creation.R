@@ -4694,7 +4694,7 @@ abcddata_add.substance_use_perceived_harm <- function(
   )
 
   # Loop over items
-  for ( k in 1:seq_along( chr_items ) ) {
+  for ( k in seq_along( chr_items ) ) {
 
     lgc_missing <-
       dtf_ABCD_long_form[[ names(chr_items)[k] ]] %in% 999
