@@ -4501,8 +4501,8 @@ abcddata_add.family_history <- function(
         " substance use other than alcohol"
       ),
       lst_collected_over = lst_collected_over,
-      chr_source_files = chr_files[2],
-      chr_source_variables = ""
+      chr_source_files = chr_files[1],
+      chr_source_variables = chr_variables[2]
     ),
 
     SMP.CHR.PS.Parents_with.Any_substance_problem = list(
