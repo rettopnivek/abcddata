@@ -4949,7 +4949,7 @@ abcddata_add.NIH_toolbox <- function(
 
   dtf_ABCD_long_form <- abcddata_merge_data_sets(
     dtf_ABCD_long_form,
-    dtf_prchrm,
+    dtf_toolbox,
     list(
       c( 'IDS.CHR.GD.Participant', 'src_subject_id' ),
       c( 'SSS.CHR.GD.Time_point', 'eventname' )
