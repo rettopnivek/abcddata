@@ -4945,15 +4945,6 @@ abcddata_add.NIH_toolbox <- function(
     header = TRUE
   )
 
-  chr_full_path <- chr_files[2]
-  if ( chr_paths[1] != '' ) {
-    chr_full_path <- paste0( chr_paths[1], '/', chr_files[2] )
-  }
-  dtf_flanker <- read.csv(
-    file = chr_full_path,
-    header = TRUE
-  )
-
   #### 2.8.2) Add variables ####
 
   dtf_ABCD_long_form <- abcddata_merge_data_sets(
