@@ -3,7 +3,7 @@
 # email: kevin.w.potter@gmail.com
 # Please email me directly if you
 # have any questions or comments
-# Last updated 2024-02-18
+# Last updated 2024-02-20
 
 # Table of contents
 # 1) Creation of base data frames
@@ -37,6 +37,7 @@
 #     2.2.2) Individual items
 #     2.2.3) Summed scores for subscales
 #     2.2.4) Codebook entries
+#     2.2.5) Output
 #   2.3) abcddata_add.substance_use
 #     2.3.1) Load in data
 #     2.3.2) Variables for heard of items
@@ -46,16 +47,38 @@
 #     2.3.6) Carry forward use from prior years
 #     2.3.7) Overall substance use
 #     2.3.8) Codebook entries
+#     2.3.9) Output
 #   2.4) abcddata_add.BIS_BAS
 #     2.4.1) Load in data
 #     2.4.2) Individual items
 #     2.4.3) Summed scores for subscales
 #     2.4.4) Codebook entries
+#     2.4.5) Output
 #   2.5) abcddata_add.CBCL
 #     2.5.1) Load in data
-#     2.5.2) Individual items
-#     2.5.3) Summed scores for subscales
+#     2.5.2) Individual items and subscales
+#     2.5.3) Add variables
 #     2.5.4) Codebook entries
+#     2.5.5) Output
+#   2.6) abcddata_add.family_history
+#     2.6.1) Load in data
+#     2.6.2) Recode variables
+#     2.6.3) Add variables
+#     2.6.4) Additional processing
+#     2.6.4) Codebook entries
+#     2.6.5) Output
+#   2.7) abcddata_add.substance_use_perceived_harm
+#     2.7.1) Load in data
+#     2.7.2) Add individual items
+#     2.7.3) Summed scores
+#     2.7.4) Codebook entries
+#     2.7.5) Output
+#   2.8) abcddata_add.NIH_toolbox
+#     2.8.1) Load in data
+#     2.8.2) Add variables
+#     2.8.3) Codebook
+#     2.8.4) Output
+
 
 #### 1) Creation of base data frames ####
 
@@ -4852,5 +4875,192 @@ abcddata_add.substance_use_perceived_harm <- function(
   return( dtf_ABCD_long_form )
 }
 
+#### 2.8) abcddata_add.NIH_toolbox ####
+#' Add Data for the NIH Toolbox
+#'
+#' Function to add results from the National
+#' Institute of Health (NIH) Toolbox for the ABCD®
+#' study. Luciana et al. (2018) describe the specific
+#' tasks from the toolbox used in the study.
+#'
+#' @param dtf_ABCD_long_form A data frame, output from
+#'   the [abcddata::abcddata_initialize_long_form]
+#'   function.
+#' @param chr_files A character vector with
+#'   the file name for the data from the NIH Toolbox.
+#' @param chr_paths A character vector with
+#'   the associated folder path for the
+#'   NIH Toolbox file.
+#' @param lgc_progress A logical value; if
+#'   \code{TRUE} displays the progress of the
+#'   data processing.
+#'
+#' @returns A data frame.
+#'
+#' @details
+#' The NIH toolbox provides multiple cognitive tasks for
+#' participants to complete.
+#'
+#' 1) The flanker task: A trial in the flanker task has
+#' a child indicate whether a central stimulus (an
+#' arrow) points left or right. The central stimulus can either
+#' be between stimuli pointing in the same direction
+#' (congruent trials) or the opposite direction (incongruent
+#' trials). Following 4 practice trials, children completed
+#' 20 trials with 12 congruent trials and 8 incongruent trials.
+#' Slotkin et al. (2012) provide details on scoring, though
+#' note the details are for the full 40 trial version of the task that
+#' includes an initial set of 20 trials using fish instead
+#' of arrows intended for children younger than 8 years of age.
+#'
+#' @references
+#' Luciana, M., Bjork, J.M., Nagel, B.J., Barch, D.M., Gonzalez,
+#'   R., Nixon, S.J., Banich, M.T. (2018). Adolescent neurocognitive
+#'   development and impacts of substance use: Overview of the
+#'   Adolescent Brain Cognitive Development (ABCD) baseline
+#'   neurocognition battery. Dev. Cogn. Neuroscience, 32, 67–79.
+#'   https://doi.org/10.1016/j.dcn.2018.02.006
+#'
+#' Slotkin, J., Nowinski, C., Hays, R., Beaumont, J., Griffith, J.,
+#'   Magasi, S., Salsman, J., & Gershon, R. (2012). NIH Toolbox
+#'   scoring and interpretation guide. National Institutes of Health.
+#'
+#' @export
 
+abcddata_add.NIH_toolbox <- function(
+    dtf_ABCD_long_form,
+    chr_files = c( 'nc_y_nihtb.csv' ),
+    chr_paths = 'core/neurocognition',
+    lgc_progress = TRUE ) {
 
+  #### 2.8.1) Load in data ####
+
+  # Read in file
+  chr_full_path <- chr_files[1]
+  if ( chr_paths[1] != '' ) {
+    chr_full_path <- paste0( chr_paths[1], '/', chr_files[1] )
+  }
+  dtf_toolbox <- read.csv(
+    file = chr_full_path,
+    header = TRUE
+  )
+
+  chr_full_path <- chr_files[2]
+  if ( chr_paths[1] != '' ) {
+    chr_full_path <- paste0( chr_paths[1], '/', chr_files[2] )
+  }
+  dtf_flanker <- read.csv(
+    file = chr_full_path,
+    header = TRUE
+  )
+
+  #### 2.8.2) Add variables ####
+
+  dtf_ABCD_long_form <- abcddata_merge_data_sets(
+    dtf_ABCD_long_form,
+    dtf_prchrm,
+    list(
+      c( 'IDS.CHR.GD.Participant', 'src_subject_id' ),
+      c( 'SSS.CHR.GD.Time_point', 'eventname' )
+    ),
+    c(
+      # Flanker task
+      QST.DBL.NIH_TB_Flanker.Total_correct =
+        'nihtbx_flanker_rawscore',
+      QST.DBL.NIH_TB_Flanker.Computed_score =
+        'nihtbx_flanker_cs',
+      QST.DBL.NIH_TB_Flanker.T_score =
+        'nihtbx_flanker_uncorrected',
+      QST.DBL.NIH_TB_Flanker.Corrected_T_score =
+        'nihtbx_flanker_agecorrected'
+    ),
+    lgc_progress = lgc_progress
+  )
+
+  #### 2.8.3) Codebook ####
+
+  lst_collected_over <- abcddata_codebook_collected_over(
+    dtf_ABCD_long_form,
+    'QST.DBL.NIH_TB_Flanker.Total_correct',
+    'SSS.DBL.GD.Year'
+  )
+
+  chr_flanker_intro <- paste0(
+    "Results for the National Health Institute Toolbox ",
+    "Flanker task - a measure of executive functioning and ",
+    "inhibitory control: "
+  )
+
+  lst_codebook_entries <- list(
+
+    # Flanker task
+    QST.DBL.NIH_TB_Flanker.Total_correct = list(
+      chr_description = paste0(
+        chr_flanker_intro,
+        "The total number of correct responses out of 20 trials"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = 'nihtbx_flanker_rawscore'
+    ),
+
+    QST.DBL.NIH_TB_Flanker.Computed_score = list(
+      chr_description = paste0(
+        chr_flanker_intro,
+        "A composite score ranging from 0 to 10 with higher scores ",
+        "indicating faster and more accurate responding - ",
+        "(a) accuracy is weighted to be between 0 and 5 and (b) median ",
+        "reaction time for correct responses is truncated to be ",
+        "between 500 and 3000 milliseconds; log-transformed; ",
+        "divided by 1.79 and multipled by 5; then 5 minus the result ",
+        "gives in the weight between 0 and 5; (3) the sum of the two ",
+        "weighted scores produces the 0 to 10 final score"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = 'nihtbx_flanker_cs'
+    ),
+
+    QST.DBL.NIH_TB_Flanker.T_score = list(
+      chr_description = paste0(
+        "An uncorrected T-score for performance on the task ",
+        "scaled to have a population mean of 100 and a standard ",
+        "deviation of 15"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = 'nihtbx_flanker_uncorrected'
+    ),
+
+    QST.DBL.NIH_TB_Flanker.Corrected_T_score = list(
+      chr_description = paste0(
+        "An age-corrected T-score for performance on the task ",
+        "scaled to have a population mean of 100 and a standard ",
+        "deviation of 15"
+      ),
+      lst_collected_over = lst_collected_over,
+      chr_source_files = chr_files[1],
+      chr_source_variables = 'nihtbx_flanker_agecorrected'
+    )
+
+  )
+
+  # Loop over codebook entries
+  for ( l in seq_along(lst_codebook_entries) ) {
+
+    lst_arg <- lst_codebook_entries[[l]]
+    lst_arg$dtf_base <- dtf_ABCD_long_form
+    lst_arg$chr_column <- names( lst_codebook_entries )[l]
+
+    dtf_ABCD_long_form <- do.call(
+      abcddata_codebook_add_entry,
+      lst_arg
+    )
+
+    # Close 'Loop over codebook entries'
+  }
+
+  #### 2.8.4) Output ####
+
+  return( dtf_ABCD_long_form )
+}

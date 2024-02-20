@@ -3,6 +3,7 @@
 export("%with%")
 export(abcddata_add.BIS_BAS)
 export(abcddata_add.CBCL)
+export(abcddata_add.NIH_toolbox)
 export(abcddata_add.UPPS)
 export(abcddata_add.family_history)
 export(abcddata_add.sample_characteristics)
