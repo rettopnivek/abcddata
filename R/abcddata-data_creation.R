@@ -4956,13 +4956,13 @@ abcddata_add.NIH_toolbox <- function(
     ),
     c(
       # Flanker task
-      QST.DBL.NIH_TB_Flanker.Total_correct =
+      QST.INT.CS.NIH_TB_Flanker.Total_correct =
         'nihtbx_flanker_rawscore',
-      QST.DBL.NIH_TB_Flanker.Computed_score =
+      QST.DBL.CS.NIH_TB_Flanker.Computed_score =
         'nihtbx_flanker_cs',
-      QST.DBL.NIH_TB_Flanker.T_score =
+      QST.DBL.CS.NIH_TB_Flanker.T_score =
         'nihtbx_flanker_uncorrected',
-      QST.DBL.NIH_TB_Flanker.Corrected_T_score =
+      QST.DBL.CS.NIH_TB_Flanker.Corrected_T_score =
         'nihtbx_flanker_agecorrected'
     ),
     lgc_progress = lgc_progress
@@ -4972,7 +4972,7 @@ abcddata_add.NIH_toolbox <- function(
 
   lst_collected_over <- abcddata_codebook_collected_over(
     dtf_ABCD_long_form,
-    'QST.DBL.NIH_TB_Flanker.Total_correct',
+    'QST.INT.CS.NIH_TB_Flanker.Total_correct',
     'SSS.DBL.GD.Year'
   )
 
@@ -4985,7 +4985,7 @@ abcddata_add.NIH_toolbox <- function(
   lst_codebook_entries <- list(
 
     # Flanker task
-    QST.DBL.NIH_TB_Flanker.Total_correct = list(
+    QST.INT.CS.NIH_TB_Flanker.Total_correct = list(
       chr_description = paste0(
         chr_flanker_intro,
         "The total number of correct responses out of 20 trials"
@@ -4995,7 +4995,7 @@ abcddata_add.NIH_toolbox <- function(
       chr_source_variables = 'nihtbx_flanker_rawscore'
     ),
 
-    QST.DBL.NIH_TB_Flanker.Computed_score = list(
+    QST.DBL.CS.NIH_TB_Flanker.Computed_score = list(
       chr_description = paste0(
         chr_flanker_intro,
         "A composite score ranging from 0 to 10 with higher scores ",
@@ -5012,7 +5012,7 @@ abcddata_add.NIH_toolbox <- function(
       chr_source_variables = 'nihtbx_flanker_cs'
     ),
 
-    QST.DBL.NIH_TB_Flanker.T_score = list(
+    QST.DBL.CS.NIH_TB_Flanker.T_score = list(
       chr_description = paste0(
         "An uncorrected T-score for performance on the task ",
         "scaled to have a population mean of 100 and a standard ",
@@ -5023,7 +5023,7 @@ abcddata_add.NIH_toolbox <- function(
       chr_source_variables = 'nihtbx_flanker_uncorrected'
     ),
 
-    QST.DBL.NIH_TB_Flanker.Corrected_T_score = list(
+    QST.DBL.CS.NIH_TB_Flanker.Corrected_T_score = list(
       chr_description = paste0(
         "An age-corrected T-score for performance on the task ",
         "scaled to have a population mean of 100 and a standard ",
