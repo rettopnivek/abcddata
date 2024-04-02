@@ -3,7 +3,7 @@
 # email: kevin.w.potter@gmail.com
 # Please email me directly if you
 # have any questions or comments
-# Last updated 2024-02-20
+# Last updated 2024-04-02
 
 # Table of contents
 # 1) Creation of base data frames
@@ -1679,7 +1679,7 @@ abcddata_add.sample_characteristics <- function(
       SMP.CHR.PS.Income.Combined.Collapsed_7 =
         'recoded.combined_income_collapsed_7',
       SMP.CHR.PS.Income.Combined.Collapsed_4 =
-        'recoded.combined_income_collapsed_7',
+        'recoded.combined_income_collapsed_4',
       SMP.CHR.PS.Marital_status =
         'recoded.marital_status',
       SMP.CHR.PS.Marital_status.Collapsed_3 =
