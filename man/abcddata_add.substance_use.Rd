@@ -47,7 +47,7 @@ other types of substances).
 Substances were categorized into four types:
 alcohol, nicotine or tobacco, cannabis, and
 other substances (which consisted of: synthetic MJ,
-bittamugen or byphoditin, sniffing products to get
+sniffing products to get
 high, prescription med abuse, cocaine, bath salts,
 meth, ecstasy, ketamine, GBH, heroin, hallucinogens,
 mushrooms, salvia, or steroids). See Lisdahl et al.

@@ -1,6 +1,6 @@
 Package: abcddata
 Title: Data Preparation for the ABCD® Study
-Version: 0.0.12
+Version: 0.0.13
 Authors@R: 
     person( "Kevin", "Potter", , "kevin.w.potter@gmail.com", 
     role = c("aut", "cre"),
@@ -10,7 +10,7 @@ Description: Assorted functions for processing data collected
 License: MIT + License
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends: 
     R (>= 4.0)
 LazyData: true

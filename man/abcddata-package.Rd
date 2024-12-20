@@ -2,6 +2,7 @@
 % Please edit documentation in R/abcddata-package.R
 \docType{package}
 \name{abcddata-package}
+\alias{abcddata}
 \alias{abcddata-package}
 \title{Data Preparation for the ABCD® Study}
 \description{
@@ -11,4 +12,15 @@ from the Adolescent Brain Cognitive Development (ABCD)
 Study (\url{https://abcdstudy.org/}), held in the NIMH Data
 Archive (NDA). See \url{https://rettopnivek.github.io/abcddata/}
 for more details regarding the R package.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://rettopnivek.github.io/ddabcd/}
+}
+
+}
+\author{
+\strong{Maintainer}: Kevin Potter \email{kevin.w.potter@gmail.com} (\href{https://orcid.org/0000-0002-3845-0512}{ORCID})
+
 }

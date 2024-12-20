@@ -3,7 +3,7 @@
 # email: kevin.w.potter@gmail.com
 # Please email me directly if you
 # have any questions or comments
-# Last updated 2024-04-02
+# Last updated 2024-12-20
 
 # Table of contents
 # 1) Creation of base data frames
@@ -2467,7 +2467,7 @@ abcddata_add.UPPS <- function(
 #' Substances were categorized into four types:
 #' alcohol, nicotine or tobacco, cannabis, and
 #' other substances (which consisted of: synthetic MJ,
-#' bittamugen or byphoditin, sniffing products to get
+#' sniffing products to get
 #' high, prescription med abuse, cocaine, bath salts,
 #' meth, ecstasy, ketamine, GBH, heroin, hallucinogens,
 #' mushrooms, salvia, or steroids). See Lisdahl et al.
@@ -2529,36 +2529,40 @@ abcddata_add.substance_use <- function(
 
   # Initialize columns
   # ALC = Alcohol
-  dtf_ABCD_long_form$SBS.CHR.CS.ALC.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.ALC.CN.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.ALC.CR.Type_of_use <- ''
   # NCT = Nicotine or tobacco
-  dtf_ABCD_long_form$SBS.CHR.CS.NCT.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.NCT.CN.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.ALC.CR.Type_of_use <- ''
   # CNN = Cannabis
-  dtf_ABCD_long_form$SBS.CHR.CS.CNN.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.CNN.CN.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.ALC.CR.Type_of_use <- ''
   # OTH = Other substances
-  dtf_ABCD_long_form$SBS.CHR.CS.OTH.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.OTH.CN.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.ALC.CR.Type_of_use <- ''
 
   #### 2.3.2) Variables for heard of items ####
 
   lst_column.heard_of <- list(
-    SBS.CHR.CS.ALC.Type_of_use = c(
+    SBS.CHR.ALC.CN.Type_of_use = c(
       'tlfb_alc',
       'tlfb_alc_l'
     ),
-    SBS.CHR.CS.NCT.Type_of_use = c(
+    SBS.CHR.NCT.CN.Type_of_use = c(
       'tlfb_tob',
       'tlfb_tob_l'
     ),
-    SBS.CHR.CS.CNN.Type_of_use = c(
+    SBS.CHR.CNN.CN.Type_of_use = c(
       'tlfb_mj',
       'tlfb_mj_l'
     ),
-    SBS.CHR.CS.OTH.Type_of_use = c(
+    SBS.CHR.OTH.CN.Type_of_use = c(
 
       'tlfb_mj_synth', # Synthetic MJ [K2 or spice]
       'tlfb_mj_synth_l',
 
-      'tlfb_bitta', # Bittamugen or byphoditin
-      'tlfb_bitta_l',
+      # 'tlfb_bitta', # Bittamugen or byphoditin
+      # 'tlfb_bitta_l', # Fake drug
 
       'tlfb_inhalant', # Sniffing products to get high
       'tlfb_inhalant_l',
@@ -2587,25 +2591,25 @@ abcddata_add.substance_use <- function(
   #### 2.3.3) Variables for experimentation ####
 
   lst_column.experimentation <- list(
-    SBS.CHR.CS.ALC.Type_of_use = c(
+    SBS.CHR.ALC.CN.Type_of_use = c(
       'tlfb_alc_sip',
       'tlfb_alc_sip_l'
     ),
-    SBS.CHR.CS.NCT.Type_of_use = c(
+    SBS.CHR.NCT.CN.Type_of_use = c(
       'tlfb_tob_puff',
       'tlfb_tob_puff_l'
     ),
-    SBS.CHR.CS.CNN.Type_of_use = c(
+    SBS.CHR.CNN.CN.Type_of_use = c(
       'tlfb_mj_puff',
       'tlfb_mj_puff_l'
     ),
-    SBS.CHR.CS.OTH.Type_of_use = c(
+    SBS.CHR.OTH.CN.Type_of_use = c(
 
       "tlfb_mj_synth_use", # Synthetic MJ [K2 or spice]
       "tlfb_mj_synth_use_l",
 
-      "tlfb_bitta_use", # Bittamugen or byphoditin
-      "tlfb_bitta_use_l",
+      # "tlfb_bitta_use", # Bittamugen or byphoditin
+      # "tlfb_bitta_use_l", # Fake drug
 
       "tlfb_inhalant_use", # Sniffing products to get high
       "tlfb_inhalant_use_l",
@@ -2664,13 +2668,13 @@ abcddata_add.substance_use <- function(
   #### 2.3.4) Variables for initiation ####
 
   lst_column.initiation <- list(
-    SBS.CHR.CS.ALC.Type_of_use = c(
+    SBS.CHR.ALC.CN.Type_of_use = c(
       'tlfb_alc_use',
       'tlfb_alc_use_l',
       'isip_2_2',
       'isip_2_l'
     ),
-    SBS.CHR.CS.NCT.Type_of_use = c(
+    SBS.CHR.NCT.CN.Type_of_use = c(
       'tlfb_cig_use',
       'tlfb_cig_use_l',
       'tlfb_ecig_use',
@@ -2684,7 +2688,7 @@ abcddata_add.substance_use <- function(
       'tlfb_pipes_use',
       'tlfb_pipes_use_l'
     ),
-    SBS.CHR.CS.CNN.Type_of_use = c(
+    SBS.CHR.CNN.CN.Type_of_use = c(
       'tlfb_mj_use',
       'tlfb_mj_use_l',
       'tlfb_blunt_use',
@@ -2698,13 +2702,13 @@ abcddata_add.substance_use <- function(
       'tlfb_tincture_use',
       'tlfb_tincture_use_l'
     ),
-    SBS.CHR.CS.OTH.Type_of_use = c(
+    SBS.CHR.OTH.CN.Type_of_use = c(
 
       "tlfb_mj_synth_use", # Synthetic MJ [K2 or spice]
       "tlfb_mj_synth_use_l",
 
-      "tlfb_bitta_use", # Bittamugen or byphoditin
-      "tlfb_bitta_use_l",
+      # "tlfb_bitta_use", # Bittamugen or byphoditin
+      # "tlfb_bitta_use_l", # Fake drug
 
       "tlfb_inhalant_use", # Sniffing products to get high
       "tlfb_inhalant_use_l",
@@ -2797,7 +2801,7 @@ abcddata_add.substance_use <- function(
             dtf_sui[k, lst_column.experimentation[[l]] ]
           )
 
-          # If non-missing data
+          # If non-missing data [Experimentation]
           if ( any( !is.na(x) ) ) {
 
             # If endorsed
@@ -2813,7 +2817,7 @@ abcddata_add.substance_use <- function(
               # Close else for 'If endorsed'
             }
 
-            # Close 'If non-missing data'
+            # Close 'If non-missing data [Experimentation]'
           } else {
 
             # Check if heard of substance
@@ -2821,7 +2825,7 @@ abcddata_add.substance_use <- function(
               dtf_sui[k, lst_column.heard_of[[l]] ]
             )
 
-            # Any non-missing data
+            # Any non-missing data [Heard]
             if ( any( !is.na(x) ) ) {
 
               # If haven't heard of
@@ -2829,10 +2833,10 @@ abcddata_add.substance_use <- function(
                 chr_out <- 'No use'
               }
 
-              # Close 'Any non-missing data'
+              # Close 'Any non-missing data [Heard]'
             }
 
-            # Close else for 'If non-missing data'
+            # Close else for 'If non-missing data [Experimentation]'
           }
 
           # Initiation
@@ -2841,7 +2845,7 @@ abcddata_add.substance_use <- function(
             dtf_sui[k, lst_column.initiation[[l]] ]
           )
 
-          # If non-missing data
+          # If non-missing data [Initiation]
           if ( any( !is.na(x) ) ) {
 
             # If endorsed
@@ -2852,7 +2856,7 @@ abcddata_add.substance_use <- function(
               # Close 'If endorsed'
             }
 
-            # Close 'If non-missing data'
+            # Close 'If non-missing data [Initiation]'
           }
 
           # Close 'If data entries exist'
@@ -2869,44 +2873,61 @@ abcddata_add.substance_use <- function(
 
   chr_ids <- unique( dtf_ABCD_long_form$IDS.CHR.GD.Participant )
 
+  chr_CF_columns <- gsub(
+    'CN.Type_of_use',
+    'CR.Type_of_use',
+    chr_columns, fixed = TRUE
+  )
+
+  # Loop over columns
+  for ( p in seq_along(chr_columns) ) {
+
+    # Initialize carry-forward variable
+    dtf_ABCD_long_form[[ chr_columns[p] ]] <-
+      dtf_ABCD_long_form[[ chr_CF_columns[p] ]]
+
+    # Close 'Loop over columns'
+  }
+
   # Loop over participants
   for ( s in chr_ids ) {
 
     lgc_rows <- dtf_ABCD_long_form$IDS.CHR.GD.Participant == s
 
     # Loop over substance categories
-    for ( p in seq_along( chr_columns ) ) {
+    for ( p in seq_along( chr_CF_columns ) ) {
 
       lgc_exp <-
         dtf_ABCD_long_form[[
-          chr_columns[p]
+          chr_CF_columns[p]
         ]][lgc_rows] %in% 'Experimentation'
       lgc_carry_forward <- cumsum(lgc_exp) > 0
 
-      # If use should be carried forward
+      # If use should be carried forward [Experimentation]
       if ( any( lgc_carry_forward ) ) {
 
         dtf_ABCD_long_form[[
-          chr_columns[p]
+          chr_CF_columns[p]
         ]][lgc_rows][
           lgc_carry_forward
         ] <- 'Experimentation'
 
-        # Close 'If use should be carried forward'
+        # Close 'If use should be carried forward [Experimentation]'
       }
 
-      lgc_exp <-
-        dtf_ABCD_long_form[[ chr_columns[p] ]][lgc_rows] %in% 'Initiation'
-      lgc_carry_forward <- cumsum(lgc_exp) > 0
+      lgc_ini <-
+        dtf_ABCD_long_form[[ chr_CF_columns[p] ]][lgc_rows] %in%
+        'Initiation'
+      lgc_carry_forward <- cumsum(lgc_ini) > 0
 
-      # If use should be carried forward
+      # If use should be carried forward [Initiation]
       if ( any( lgc_carry_forward ) ) {
 
-        dtf_ABCD_long_form[[ chr_columns[p] ]][lgc_rows][
+        dtf_ABCD_long_form[[ chr_CF_columns[p] ]][lgc_rows][
           lgc_carry_forward
         ] <- 'Initiation'
 
-        # Close 'If use should be carried forward'
+        # Close 'If use should be carried forward [Initiation]'
       }
 
       # Close 'Loop over substance categories'
@@ -2917,10 +2938,25 @@ abcddata_add.substance_use <- function(
 
   #### 2.3.7) Overall substance use ####
 
-  dtf_ABCD_long_form$SBS.CHR.CS.ANS.Type_of_use <- sapply(
+  dtf_ABCD_long_form$SBS.CHR.CN.ANS.Type_of_use <- sapply(
     1:nrow( dtf_ABCD_long_form ), function(r) {
 
       x <- unlist( dtf_ABCD_long_form[r, chr_columns] )
+
+      chr_out <- NA
+
+      if ( any( x %in% 'No use' ) ) chr_out <- 'No use'
+      if ( any( x %in% 'Experimentation' ) ) chr_out <- 'Experimentation'
+      if ( any( x %in% 'Initiation' ) ) chr_out <- 'Initiation'
+
+      return( chr_out )
+    }
+  )
+
+  dtf_ABCD_long_form$SBS.CHR.ANS.CR.Type_of_use <- sapply(
+    1:nrow( dtf_ABCD_long_form ), function(r) {
+
+      x <- unlist( dtf_ABCD_long_form[r, chr_CF_columns] )
 
       chr_out <- NA
 
@@ -2936,10 +2972,10 @@ abcddata_add.substance_use <- function(
 
   lst_codebook_entries <- list(
 
-    SBS.CHR.CS.ALC.Type_of_use = list(
+    SBS.CHR.ALC.CN.Type_of_use = list(
       chr_description = paste0(
         "Whether participant had no use/experimentation/initiation of ",
-        "any alcohol"
+        "any alcohol for current time point"
       ),
       lst_values_and_labels = list(
         content = c(
@@ -2955,7 +2991,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SBS.CHR.CS.ALC.Type_of_use',
+        'SBS.CHR.ALC.CN.Type_of_use',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -2971,10 +3007,45 @@ abcddata_add.substance_use <- function(
       )
     ),
 
-    SBS.CHR.CS.NCT.Type_of_use = list(
+    SBS.CHR.ALC.CR.Type_of_use = list(
       chr_description = paste0(
         "Whether participant had no use/experimentation/initiation of ",
-        "any nicotine or tobacco products"
+        "any alcohol carrying forward use at prior times"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          "No use",
+          "Experimentation",
+          "Initiation"
+        ),
+        additional_content = c(
+          "",
+          "Alcohol sipping",
+          "Had one or more standard alcohol drinks"
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SBS.CHR.ALC.CN.Type_of_use',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        'tlfb_alc',
+        'tlfb_alc_l',
+        'tlfb_alc_sip',
+        'tlfb_alc_sip_l',
+        'tlfb_alc_use',
+        'tlfb_alc_use_l',
+        'isip_2_2',
+        'isip_2_l'
+      )
+    ),
+
+    SBS.CHR.NCT.CN.Type_of_use = list(
+      chr_description = paste0(
+        "Whether participant had no use/experimentation/initiation of ",
+        "any nicotine or tobacco products for current time point"
       ),
       lst_values_and_labels = list(
         content = c(
@@ -2990,7 +3061,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SBS.CHR.CS.NCT.Type_of_use',
+        'SBS.CHR.NCT.CN.Type_of_use',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -3014,10 +3085,53 @@ abcddata_add.substance_use <- function(
       )
     ),
 
-    SBS.CHR.CS.CNN.Type_of_use = list(
+    SBS.CHR.NCT.CR.Type_of_use = list(
       chr_description = paste0(
         "Whether participant had no use/experimentation/initiation of ",
-        "any cannabis products"
+        "any nicotine or tobacco products carrying forward use at prior times"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          "No use",
+          "Experimentation",
+          "Initiation"
+        ),
+        additional_content = c(
+          "",
+          "Puff or taste of nicotine or tobacco",
+          "More than a puff or taste of nicotine or tobacco"
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SBS.CHR.NCT.CN.Type_of_use',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        'tlfb_tob',
+        'tlfb_tob_l',
+        'tlfb_tob_puff',
+        'tlfb_tob_puff_l',
+        'tlfb_cig_use',
+        'tlfb_cig_use_l',
+        'tlfb_ecig_use',
+        'tlfb_ecig_use_l',
+        'tlfb_chew_use',
+        'tlfb_chew_use_l',
+        'tlfb_cigar_use',
+        'tlfb_cigar_use_l',
+        'tlfb_hookah_use',
+        'tlfb_hookah_use_l',
+        'tlfb_pipes_use',
+        'tlfb_pipes_use_l'
+      )
+    ),
+
+    SBS.CHR.CNN.CN.Type_of_use = list(
+      chr_description = paste0(
+        "Whether participant had no use/experimentation/initiation of ",
+        "any cannabis products for current time point"
       ),
       lst_values_and_labels = list(
         content = c(
@@ -3033,7 +3147,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SBS.CHR.CS.CNN.Type_of_use',
+        'SBS.CHR.CNN.CN.Type_of_use',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -3057,10 +3171,53 @@ abcddata_add.substance_use <- function(
       )
     ),
 
-    SBS.CHR.CS.OTH.Type_of_use = list(
+    SBS.CHR.CNN.CR.Type_of_use = list(
       chr_description = paste0(
         "Whether participant had no use/experimentation/initiation of ",
-        "any cannabis products"
+        "any cannabis products carrying forward use at prior times"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          "No use",
+          "Experimentation",
+          "Initiation"
+        ),
+        additional_content = c(
+          "",
+          "Puff or taste of cannabis",
+          "More than a puff or taste of cannabis"
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SBS.CHR.CNN.CN.Type_of_use',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        'tlfb_mj',
+        'tlfb_mj_l',
+        'tlfb_mj_puff',
+        'tlfb_mj_puff_l',
+        'tlfb_mj_use',
+        'tlfb_mj_use_l',
+        'tlfb_blunt_use',
+        'tlfb_blunt_use_l',
+        'tlfb_edible_use',
+        'tlfb_edible_use_l',
+        'tlfb_mj_conc_use',
+        'tlfb_mj_conc_use_l',
+        'tlfb_mj_drink_use',
+        'tlfb_mj_drink_use_l',
+        'tlfb_tincture_use',
+        'tlfb_tincture_use_l'
+      )
+    ),
+
+    SBS.CHR.OTH.CN.Type_of_use = list(
+      chr_description = paste0(
+        "Whether participant had no use/experimentation/initiation of ",
+        "any cannabis products for current time point"
       ),
       lst_values_and_labels = list(
         content = c(
@@ -3074,7 +3231,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SBS.CHR.CS.OTH.Type_of_use',
+        'SBS.CHR.OTH.CN.Type_of_use',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -3082,8 +3239,8 @@ abcddata_add.substance_use <- function(
         'tlfb_mj_synth', # Synthetic MJ [K2 or spice]
         'tlfb_mj_synth_l',
 
-        'tlfb_bitta', # Bittamugen or byphoditin
-        'tlfb_bitta_l',
+        # 'tlfb_bitta', # Bittamugen or byphoditin
+        # 'tlfb_bitta_l', # Fake drug
 
         'tlfb_inhalant', # Sniffing products to get high
         'tlfb_inhalant_l',
@@ -3109,8 +3266,8 @@ abcddata_add.substance_use <- function(
         "tlfb_mj_synth_use", # Synthetic MJ [K2 or spice]
         "tlfb_mj_synth_use_l",
 
-        "tlfb_bitta_use", # Bittamugen or byphoditin
-        "tlfb_bitta_use_l",
+        # "tlfb_bitta_use", # Bittamugen or byphoditin
+        # "tlfb_bitta_use_l",
 
         "tlfb_inhalant_use", # Sniffing products to get high
         "tlfb_inhalant_use_l",
@@ -3165,11 +3322,119 @@ abcddata_add.substance_use <- function(
       )
     ),
 
-    SBS.CHR.CS.ANS.Type_of_use = list(
+    SBS.CHR.OTH.CR.Type_of_use = list(
+      chr_description = paste0(
+        "Whether participant had no use/experimentation/initiation of ",
+        "any cannabis products carrying forward use at prior times"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          "No use",
+          "Initiation"
+        ),
+        additional_content = c(
+          "",
+          "Any use of other substances"
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SBS.CHR.OTH.CN.Type_of_use',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        'tlfb_mj_synth', # Synthetic MJ [K2 or spice]
+        'tlfb_mj_synth_l',
+
+        # 'tlfb_bitta', # Bittamugen or byphoditin
+        # 'tlfb_bitta_l', # Fake drug
+
+        'tlfb_inhalant', # Sniffing products to get high
+        'tlfb_inhalant_l',
+
+        'tlfb_rx_misuse', # Prescription med abuse
+        'tlfb_rx_misuse_l',
+
+        'tlfb_list_yes_no',
+        'tlfb_list_yes_no_l',
+
+        'tlfb_list___1', # Cocaine
+        'tlfb_list___2', # Bath salts
+        'tlfb_list___3', # Meth
+        'tlfb_list___4', # Ecstasy
+        'tlfb_list___5', # Ketamine
+        'tlfb_list___6', # GBH
+        'tlfb_list___7', # Heroin
+        'tlfb_list___8', # Hallucinogens
+        'tlfb_list___9', # Mushrooms
+        'tlfb_list___10', # Salvia
+        'tlfb_list___11',  # Steroids
+
+        "tlfb_mj_synth_use", # Synthetic MJ [K2 or spice]
+        "tlfb_mj_synth_use_l",
+
+        # "tlfb_bitta_use", # Bittamugen or byphoditin
+        # "tlfb_bitta_use_l", # Fake drug
+
+        "tlfb_inhalant_use", # Sniffing products to get high
+        "tlfb_inhalant_use_l",
+
+        "tlfb_sniff_use",
+        # "tlfb_sniff_use_l",
+
+        "tlfb_cough_use", # Prescription med abuse
+        "tlfb_cough_use_l",
+
+        "tlfb_tranq_use",
+        "tlfb_tranq_use_l",
+
+        "tlfb_vicodin_use",
+        "tlfb_vicodin_use_l",
+
+        "tlfb_opi_use",
+        "tlfb_opi_use_l",
+
+        "tlfb_coc_use", # Cocaine
+        "tlfb_coc_use_l",
+
+        "tlfb_bsalts_use", # Bath salts
+        "tlfb_bsalts_use_l",
+
+        "tlfb_meth_use", # Meth
+        "tlfb_meth_use_l",
+
+        "tlfb_amp_use", # Ecstasy
+        "tlfb_amp_use_l",
+
+        "tlfb_mdma_use",
+        "tlfb_mdma_use_l",
+
+        "tlfb_ket_use", # Ketamine
+        "tlfb_ket_use_l",
+
+        "tlfb_ghb_use", # GBH
+        "tlfb_ghb_use_l",
+
+        "tlfb_hall_use", # Hallucinogens
+        # "tlfb_hall_use_l",
+
+        "tlfb_shrooms_use", # Mushrooms
+        "tlfb_shrooms_use_l",
+
+        "tlfb_salvia_use", # Salvia
+        "tlfb_salvia_use_l",
+
+        "tlfb_steroids_use", # Steroids
+        "tlfb_steroids_use_l"
+      )
+    ),
+
+    SBS.CHR.ANS.CN.Type_of_use = list(
       chr_description = paste0(
         "Whether participant had no use/experimentation/initiation of ",
         "any type of substance (alcohol or nicotine/tobacco or ",
-        "cannabis or other)"
+        "cannabis or other) for current time point"
       ),
       lst_values_and_labels = list(
         content = c(
@@ -3189,7 +3454,36 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SBS.CHR.CS.ANS.Type_of_use',
+        'SBS.CHR.ANS.Type_of_use',
+        'SSS.DBL.GD.Year'
+      )
+    ),
+
+    SBS.CHR.ANS.CR.Type_of_use = list(
+      chr_description = paste0(
+        "Whether participant had no use/experimentation/initiation of ",
+        "any type of substance (alcohol or nicotine/tobacco or ",
+        "cannabis or other) carrying forward use at prior times"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          "No use",
+          "Experimentation",
+          "Initiation"
+        ),
+        additional_content = c(
+          "",
+          "Alcohol sipping or nicotine/tobacco/cannabis puff or taste",
+          paste0(
+            "One or more alcohol standard drinks or more than a ",
+            "puff/taste of nicotine/tobacco/cannabis or any kind of ",
+            "use of other substances"
+          )
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SBS.CHR.ANS.Type_of_use',
         'SSS.DBL.GD.Year'
       )
     )

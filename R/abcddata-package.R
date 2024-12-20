@@ -3,7 +3,7 @@
 # email: kevin.w.potter@gmail.com
 # Please email me directly if you
 # have any questions or comments
-# Last updated 2024-02-16
+# Last updated 2024-12-20
 
 # Package development
 # - To test functions
@@ -17,7 +17,6 @@
 
 #' Data Preparation for the ABCD® Study
 #'
-#' @docType package
 #' @name abcddata-package
 #'
 #' @description
@@ -28,4 +27,4 @@
 #' Study (\url{https://abcdstudy.org/}), held in the NIMH Data
 #' Archive (NDA). See \url{https://rettopnivek.github.io/abcddata/}
 #' for more details regarding the R package.
-NULL
+"_PACKAGE"
