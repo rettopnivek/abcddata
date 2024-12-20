@@ -42,17 +42,23 @@ sipping, nicotine/cannabis puffing or trying)
 versus initiation (one or more standard drinks
 of alcohol, more than a puff or taste of
 nicotine/cannabis, and any kind of use of
-other types of substances).
+other types of substances). The function generates
+substance use variables for the concurrent
+time point (CN) as well as a version in which
+use during past time points is carried forward
+(CR).
 
 Substances were categorized into four types:
-alcohol, nicotine or tobacco, cannabis, and
-other substances (which consisted of: synthetic MJ,
-sniffing products to get
+alcohol (ALC), nicotine or tobacco (NCT),
+cannabis (CNN), and other substances (OTH; consisting
+of: synthetic MJ, sniffing products to get
 high, prescription med abuse, cocaine, bath salts,
 meth, ecstasy, ketamine, GBH, heroin, hallucinogens,
-mushrooms, salvia, or steroids). See Lisdahl et al.
-(2018) for more details on how the ABCD® study collected
-data on substance use.
+mushrooms, salvia, or steroids). The function generates
+an additional variable collapsing across these categories
+for any substance use (ANS).
+See Lisdahl et al. (2018) for more details on how the
+ABCD® study collected data on substance use.
 }
 \references{
 Lisdahl, K. M., Sher, K. J., Conway, K. P., Gonzalez, R.,

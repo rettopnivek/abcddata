@@ -2462,17 +2462,23 @@ abcddata_add.UPPS <- function(
 #' versus initiation (one or more standard drinks
 #' of alcohol, more than a puff or taste of
 #' nicotine/cannabis, and any kind of use of
-#' other types of substances).
+#' other types of substances). The function generates
+#' substance use variables for the concurrent
+#' time point (CN) as well as a version in which
+#' use during past time points is carried forward
+#' (CR).
 #'
 #' Substances were categorized into four types:
-#' alcohol, nicotine or tobacco, cannabis, and
-#' other substances (which consisted of: synthetic MJ,
-#' sniffing products to get
+#' alcohol (ALC), nicotine or tobacco (NCT),
+#' cannabis (CNN), and other substances (OTH; consisting
+#' of: synthetic MJ, sniffing products to get
 #' high, prescription med abuse, cocaine, bath salts,
 #' meth, ecstasy, ketamine, GBH, heroin, hallucinogens,
-#' mushrooms, salvia, or steroids). See Lisdahl et al.
-#' (2018) for more details on how the ABCD® study collected
-#' data on substance use.
+#' mushrooms, salvia, or steroids). The function generates
+#' an additional variable collapsing across these categories
+#' for any substance use (ANS).
+#' See Lisdahl et al. (2018) for more details on how the
+#' ABCD® study collected data on substance use.
 #'
 #' @param dtf_ABCD_long_form A data frame, output from
 #'   the [abcddata::abcddata_initialize_long_form]
@@ -3032,7 +3038,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SBS.CHR.ALC.CN.Type_of_use',
+        'SBS.CHR.ALC.CR.Type_of_use',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -3110,7 +3116,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SBS.CHR.NCT.CN.Type_of_use',
+        'SBS.CHR.NCT.CR.Type_of_use',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -3196,7 +3202,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SBS.CHR.CNN.CN.Type_of_use',
+        'SBS.CHR.CNN.CR.Type_of_use',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -3345,7 +3351,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SBS.CHR.OTH.CN.Type_of_use',
+        'SBS.CHR.OTH.CR.Type_of_use',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
@@ -3460,7 +3466,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SBS.CHR.ANS.Type_of_use',
+        'SBS.CHR.ANS.CN.Type_of_use',
         'SSS.DBL.GD.Year'
       )
     ),
@@ -3489,7 +3495,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SBS.CHR.ANS.Type_of_use',
+        'SBS.CHR.ANS.CR.Type_of_use',
         'SSS.DBL.GD.Year'
       )
     )
