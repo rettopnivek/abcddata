@@ -2533,13 +2533,13 @@ abcddata_add.substance_use <- function(
   dtf_ABCD_long_form$SBS.CHR.ALC.CR.Type_of_use <- ''
   # NCT = Nicotine or tobacco
   dtf_ABCD_long_form$SBS.CHR.NCT.CN.Type_of_use <- ''
-  dtf_ABCD_long_form$SBS.CHR.ALC.CR.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.NCT.CR.Type_of_use <- ''
   # CNN = Cannabis
   dtf_ABCD_long_form$SBS.CHR.CNN.CN.Type_of_use <- ''
-  dtf_ABCD_long_form$SBS.CHR.ALC.CR.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.CNN.CR.Type_of_use <- ''
   # OTH = Other substances
   dtf_ABCD_long_form$SBS.CHR.OTH.CN.Type_of_use <- ''
-  dtf_ABCD_long_form$SBS.CHR.ALC.CR.Type_of_use <- ''
+  dtf_ABCD_long_form$SBS.CHR.OTH.CR.Type_of_use <- ''
 
   #### 2.3.2) Variables for heard of items ####
 
@@ -2871,6 +2871,8 @@ abcddata_add.substance_use <- function(
 
   #### 2.3.6) Carry forward use from prior years ####
 
+  if (lgc_progress) message( '  Carry-forward variables' )
+
   chr_ids <- unique( dtf_ABCD_long_form$IDS.CHR.GD.Participant )
 
   chr_CF_columns <- gsub(
@@ -2883,8 +2885,8 @@ abcddata_add.substance_use <- function(
   for ( p in seq_along(chr_columns) ) {
 
     # Initialize carry-forward variable
-    dtf_ABCD_long_form[[ chr_columns[p] ]] <-
-      dtf_ABCD_long_form[[ chr_CF_columns[p] ]]
+    dtf_ABCD_long_form[[ chr_CF_columns[p] ]] <-
+      dtf_ABCD_long_form[[ chr_columns[p] ]]
 
     # Close 'Loop over columns'
   }
@@ -2938,7 +2940,9 @@ abcddata_add.substance_use <- function(
 
   #### 2.3.7) Overall substance use ####
 
-  dtf_ABCD_long_form$SBS.CHR.CN.ANS.Type_of_use <- sapply(
+  if (lgc_progress) message( '  Any substance use' )
+
+  dtf_ABCD_long_form$SBS.CHR.ANS.CN.Type_of_use <- sapply(
     1:nrow( dtf_ABCD_long_form ), function(r) {
 
       x <- unlist( dtf_ABCD_long_form[r, chr_columns] )
@@ -2969,6 +2973,8 @@ abcddata_add.substance_use <- function(
   )
 
   #### 2.3.8) Codebook entries ####
+
+  if (lgc_progress) message( '  Codebook entries' )
 
   lst_codebook_entries <- list(
 
