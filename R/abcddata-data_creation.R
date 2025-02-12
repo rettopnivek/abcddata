@@ -3565,7 +3565,7 @@ abcddata_add.substance_use <- function(
       ),
       lst_collected_over = abcddata_codebook_collected_over(
         dtf_ABCD_long_form,
-        'SBS.LGC.Sip_for_religious',
+        'SBS.LGC.CS.ALC.Sip_for_religious',
         'SSS.DBL.GD.Year'
       ),
       chr_source_files = chr_files[1],
