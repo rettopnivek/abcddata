@@ -46,7 +46,8 @@ other types of substances). The function generates
 substance use variables for the concurrent
 time point (CN) as well as a version in which
 use during past time points is carried forward
-(CR).
+(CR). An indicator for when alcohol sipping was
+for religious ceremonies is also included.
 
 Substances were categorized into four types:
 alcohol (ALC), nicotine or tobacco (NCT),

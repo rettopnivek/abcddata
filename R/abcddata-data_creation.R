@@ -3,7 +3,7 @@
 # email: kevin.w.potter@gmail.com
 # Please email me directly if you
 # have any questions or comments
-# Last updated 2024-12-20
+# Last updated 2025-02-12
 
 # Table of contents
 # 1) Creation of base data frames
@@ -2466,7 +2466,8 @@ abcddata_add.UPPS <- function(
 #' substance use variables for the concurrent
 #' time point (CN) as well as a version in which
 #' use during past time points is carried forward
-#' (CR).
+#' (CR). An indicator for when alcohol sipping was
+#' for religious ceremonies is also included.
 #'
 #' Substances were categorized into four types:
 #' alcohol (ALC), nicotine or tobacco (NCT),
@@ -2874,6 +2875,53 @@ abcddata_add.substance_use <- function(
 
     # Close 'Loop over substance categories'
   }
+
+  # Add variable for alcohol sipping due to religious ceremonies
+  chr_match <- c(
+    'IDS.CHR.GD.Participant',
+    'SSS.CHR.GD.Time_point'
+  )
+
+  dtf_ABCD_long_form$SBS.LGC.Sip_for_religious <- sapply(
+    1:nrow( dtf_ABCD_long_form ), function(j) {
+
+      # Initialize output
+      lgc_out <- NA
+
+      lgc_row <-
+        dtf_sui$src_subject_id == dtf_ABCD_long_form[[ chr_match[1] ]][j] &
+        dtf_sui$eventname == dtf_ABCD_long_form[[ chr_match[2] ]][j]
+      lgc_exp <-
+        dtf_ABCD_long_form$SBS.CHR.CS.ALC.CN.Type_of_use[j] %in%
+        'Experimentation'
+
+      # Experimentation entry detected
+      if ( any(lgc_row) & lgc_exp ) {
+
+        # No drinking beyond religious ceremony
+        if ( dtf_sui$isip_1b_yn[lgc_row] %in% 0 |
+             dtf_sui$isip_1b_yn_l[lgc_row] %in% 0 ) {
+
+          lgc_out <- TRUE
+
+          # Close 'No drinking beyond religious ceremony'
+        }
+
+        # Drinking beyond religious ceremony
+        if ( dtf_sui$isip_1b_yn[lgc_row] %in% 1 |
+             dtf_sui$isip_1b_yn_l[lgc_row] %in% 1 ) {
+
+          lgc_out <- FALSE
+
+          # Close 'Drinking beyond religious ceremony'
+        }
+
+        # Close 'Experimentation entry detected'
+      }
+
+      return(lgc_out)
+    }
+  )
 
   #### 2.3.6) Carry forward use from prior years ####
 
@@ -3497,6 +3545,33 @@ abcddata_add.substance_use <- function(
         dtf_ABCD_long_form,
         'SBS.CHR.CS.ANS.CR.Type_of_use',
         'SSS.DBL.GD.Year'
+      )
+    ),
+
+    SBS.LGC.Sip_for_religious = list(
+      chr_description = paste0(
+        "Whether participant tried/sipped alcohol because of a ",
+        "religous ceremony"
+      ),
+      lst_values_and_labels = list(
+        content = c(
+          FALSE,
+          TRUE
+        ),
+        additional_content = c(
+          "Sipping for religious ceremony",
+          "Sipping for experimentation"
+        )
+      ),
+      lst_collected_over = abcddata_codebook_collected_over(
+        dtf_ABCD_long_form,
+        'SBS.LGC.Sip_for_religious',
+        'SSS.DBL.GD.Year'
+      ),
+      chr_source_files = chr_files[1],
+      chr_source_variables = c(
+        'isip_1b_yn',
+        'isip_1b_yn_l'
       )
     )
 
