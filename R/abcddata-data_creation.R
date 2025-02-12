@@ -2882,7 +2882,7 @@ abcddata_add.substance_use <- function(
     'SSS.CHR.GD.Time_point'
   )
 
-  dtf_ABCD_long_form$SBS.LGC.Sip_for_religious <- sapply(
+  dtf_ABCD_long_form$SBS.LGC.CS.ALC.Sip_for_religious <- sapply(
     1:nrow( dtf_ABCD_long_form ), function(j) {
 
       # Initialize output
@@ -3548,7 +3548,7 @@ abcddata_add.substance_use <- function(
       )
     ),
 
-    SBS.LGC.Sip_for_religious = list(
+    SBS.LGC.CS.ALC.Sip_for_religious = list(
       chr_description = paste0(
         "Whether participant tried/sipped alcohol because of a ",
         "religous ceremony"
